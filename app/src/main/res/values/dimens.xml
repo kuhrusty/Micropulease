@@ -1,0 +1,6 @@
+<resources>
+    <!--  this really feels like the wrong way to do this.  I just want the
+          hand tiles to scale themselves to fit in the available space!  -->
+    <dimen name="hand_tile_size">40dp</dimen>
+    <dimen name="hand_tile_inset">4dp</dimen>
+</resources>

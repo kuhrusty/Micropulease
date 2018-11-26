@@ -1,0 +1,97 @@
+<resources>
+    <string name="app_name">Micropulease</string>
+
+    <string name="p1_name_label">Player 1 Name</string>
+    <string name="p2_type_label">Opponent Type</string>
+    <string name="p2_name_label">Player 2 Name</string>
+    <string name="renderer_label">Theme</string>
+    <string name="start_game_label">Start Game!</string>
+
+    <string name="p1_default_name">Player 1</string>
+    <string name="p2_default_name">Player 2</string>
+
+    <string name="hotseat_name">Hot Seat</string>
+    <string name="hotseat_descr">2-player with a friend, handing each other the device between turns.</string>
+
+    <string name="dumbbot_name">DumbBot 1.0</string>
+    <string name="dumbbot_descr">The dumbest possible bot: draws a tile if it must, then makes the first legal move it finds.</string>
+
+    <string name="bw_renderer_name">Black &amp; White</string>
+    <string name="carthaginian1_renderer_name">Carthaginian 1</string>
+
+    <string name="switch_player_title">Swap Device</string>
+    <!--
+    1 - other player's name
+    -->
+    <string name="switch_player_message">I\'m totally %1$s.</string>
+    <string name="switch_player_ok">Yep!</string>
+
+    <string name="game_over_tie_title">Tie Game!</string>
+    <!--
+    1 - final score
+    -->
+    <string name="game_over_tie_message">Both players tie with %1$d points!</string>
+
+    <!--
+    1 - winning player's name
+    -->
+    <string name="game_over_title">%1$s Wins!</string>
+    <!--
+    1 - winning player's name
+    2 - winning player's score
+    3 - losing player's name
+    4 - losing player's score
+    -->
+    <string name="game_over_message">%1$s wins with %2$d points; %3$s has %4$d points!</string>
+
+    <string name="confirm_exit_title">Exit game?</string>
+    <string name="confirm_exit_message">Are you sure you want to exit?</string>
+    <string name="confirm_exit_yes">Yep!</string>
+    <string name="confirm_exit_cancel">No, never mind!</string>
+
+    <!--
+    1 - conceding player's name
+    -->
+    <string name="concede_title">%1$s Concedes!</string>
+    <!--
+    1 - conceding player's name
+    -->
+    <string name="concede_message">%1$s concedes the game.</string>
+    <!--
+    1 - conceding player's name
+    2 - reason
+    -->
+    <string name="concede_reason_message">%1$s concedes the game.  Reason: %2$s</string>
+    <string name="concede_ok">OK!</string>
+
+    <!--
+    1 - your name
+    2 - number of tiles in hand
+    3 - number of tiles in supply
+    4 - number of stones remaining
+    5 - score
+    -->
+    <string name="you_status">You: %2$d in hand, %3$d in supply, %4$d stones, %5$d points</string>
+    <!--
+    1 - opponent name
+    2 - number of tiles in hand
+    3 - number of tiles in supply
+    4 - number of stones remaining
+    5 - score
+    -->
+    <string name="opponent_status">%1$s: %2$d in hand, %3$d in supply, %4$d stones, %5$d points</string>
+    <!--
+    1 - your name
+    -->
+    <string name="your_turn_status">%1$s\'s turn.</string>
+    <!--
+    1 - their name
+    -->
+    <string name="their_turn_status">Waiting for %1$s.</string>
+
+    <!--
+    1 - tiles remaining in core
+    -->
+    <string name="core_remaining">Core: %1$d</string>
+
+</resources>
