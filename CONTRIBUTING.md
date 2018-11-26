@@ -34,3 +34,12 @@ Build & install the app; confirm that your new renderer shows up in the
 list of available renderers.
 
 Then go back and start coding ...
+
+**To add a preview picture,** go into ```GameState.initGame()``` and
+uncomment the bit which says "temporarily uncomment this if you want to
+generate a preview."  Then build & run it; it should come up with four
+tiles already played.  Capture the screen, crop it to half-a-tile border,
+scale it to 400 x 400 (shrug, I just picked that because it seemed nice),
+save it in ```app/src/main/res/drawable```, and add its resource ID
+(```R.drawable.your_file_name``` or whatever) to your renderer's
+```getPreviewDrawableID()```.
