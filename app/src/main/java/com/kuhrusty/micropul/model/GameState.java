@@ -40,7 +40,7 @@ p1Bot = other.p1Bot;
 p2Bot = other.p2Bot;
         board = new Board(other.board);
         coreSize = other.coreSize;
-        unseenTiles = new ArrayList<Tile>(other.unseenTiles.size());
+        unseenTiles = new ArrayList<>(other.unseenTiles.size());
         for (int ii = 0; ii < other.unseenTiles.size(); ++ii) {
             unseenTiles.add(new Tile(other.unseenTiles.get(ii)));
         }
