@@ -1,6 +1,25 @@
+If you're considering building this yourself, this is for you.
+
 There are two main areas which need a lot of work: improving the UI, and
 adding bots/AIs which don't totally suck.  See also the issue tracker at
 https://github.com/kuhrusty/Micropulease/issues.
+
+### Interesting stuff in the code
+
+- Running the bot on its own thread, and then joining back up to the UI
+  thread when the bot makes its move.  (`PlayGameActivity.notifyBot()`)
+
+### Checking it out
+
+In Android Studio 3.2.1:
+
+1. File -> New -> Project from Version Control -> Git
+
+2. Clone Repository:
+   - URL: https://github.com/kuhrusty/Micropulease.git
+   - Directory: (whatever you want; probably
+     /home/.../AndroidStudioProjects/Micropulease)
+
 
 ### Adding a Bot
 
