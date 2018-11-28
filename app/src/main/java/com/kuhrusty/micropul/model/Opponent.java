@@ -11,6 +11,10 @@ public class Opponent {
     public Opponent(Player player) {
         name = player.getName();
         type = player.getType();
+        hand = player.getTilesInHand();
+        supply = player.getTilesInSupply();
+        stones = player.getTokensRemaining();
+        score = player.getScore();
     }
 
     /**
@@ -33,17 +37,17 @@ public class Opponent {
     public int getTilesInSupply() {
         return supply;
     }
+    public int getStonesRemaining() {
+        return stones;
+    }
     public int getScore() {
         return score;
-    }
-    public int getMovesRemaining() {
-        return moves;
     }
 
     private String name;
     private String type;
     private int hand;
     private int supply;
+    private int stones;
     private int score;
-    private int moves;
 }
