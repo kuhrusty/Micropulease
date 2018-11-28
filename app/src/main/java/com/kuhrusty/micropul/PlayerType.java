@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import com.kuhrusty.micropul.bot.Bot;
 import com.kuhrusty.micropul.bot.DumbBot;
+import com.kuhrusty.micropul.bot.OptiBot;
 
 /**
  * You have to implement instantiateBot(), because I am too lazy to have a
@@ -29,6 +30,13 @@ public abstract class PlayerType {
                         @Override
                         public Bot instantiateBot(Resources res) {
                             return new DumbBot(res);
+                        }
+                    },
+                    new PlayerType(res.getString(R.string.optibot_name),
+                            res.getString(R.string.optibot_descr), true, false) {
+                        @Override
+                        public Bot instantiateBot(Resources res) {
+                            return new OptiBot(res);
                         }
                     },
             };

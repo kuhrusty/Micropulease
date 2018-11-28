@@ -16,6 +16,9 @@
     <string name="dumbbot_name">DumbBot 1.0</string>
     <string name="dumbbot_descr">The dumbest possible bot: draws a tile if it must, then makes the first legal move it finds.</string>
 
+    <string name="optibot_name">OptiBot 0</string>
+    <string name="optibot_descr">Draws a tile if it can; then makes the move which increases its score the most.</string>
+
     <string name="bw_renderer_name">Black &amp; White</string>
     <string name="carthaginian1_renderer_name">Carthaginian 1</string>
 
