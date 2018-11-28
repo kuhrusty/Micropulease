@@ -617,7 +617,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         }
 
         @Override
-        public void placeStone(Player player, int xpos, int ypos) {
+        public void placeStone(Player player, int groupID) {
             Log.d(LOGBIT, "MoveListener got placeStone()!!!");
             checkPlayer(player);
             Player tp = game.getPlayer(expectPlayer);
@@ -626,11 +626,11 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
 //XXX i18n
                 throw new IllegalPlayException(tp.getName() + " tried to place a stone, but has none available!");
             }
-            if (!game.getBoard().getSquare(xpos, ypos).isMicropul()) {
+            Group group = game.getBoard().getGroupByID(groupID);
+            if (group.equals(Group.None)) {
 //XXX i18n
-                throw new IllegalPlayException(tp.getName() + " tried to place a stone on a square which doesn't contain a micropul!");
+                throw new IllegalPlayException(tp.getName() + " tried to place a stone, but gave an invalid group!");
             }
-            Group group = game.getBoard().getGroup(xpos, ypos);
             if (!group.getOwner().equals(Owner.Nobody)) {
 //XXX i18n
                 throw new IllegalPlayException(tp.getName() + " tried to place a stone on a group which is already owned!");

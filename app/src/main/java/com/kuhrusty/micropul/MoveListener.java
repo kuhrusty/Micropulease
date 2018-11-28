@@ -33,10 +33,9 @@ public interface MoveListener {
      * unclaimed group.
      *
      * @param player the Player instance which was passed to takeTurn().
-     * @param xpos note that this is <b>in squares,</b> not tiles!
-     * @param ypos note that this is <b>in squares,</b> not tiles!
+     * @param groupID the ID of the Group, taken from the Board.
      */
-    void placeStone(Player player, int xpos, int ypos);
+    void placeStone(Player player, int groupID);
 
     /**
      * Notifies the listener that the player has decided to give up.
