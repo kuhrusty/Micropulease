@@ -22,7 +22,6 @@ import com.kuhrusty.micropul.model.Player;
 import com.kuhrusty.micropul.model.Tile;
 import com.kuhrusty.micropul.model.TilePlayResult;
 import com.kuhrusty.micropul.renderer.BWRenderer;
-import com.kuhrusty.micropul.renderer.CarthaginianRenderer1;
 
 /**
  * <p>There are two places where a player's turn is really done: in drawTile(),
@@ -166,10 +165,10 @@ public class PlayGameActivity extends AppCompatActivity {
         savedGame = new GameState(game);
         game.getBoard().playStone(group, currentPlayer);
         boardView.setSelectedStone(false);
-        int remaining = game.getPlayer(currentPlayer).getTokensRemaining() - 1;
+        int remaining = game.getPlayer(currentPlayer).getStonesRemaining() - 1;
         selectedTile.setSelected(false);
         selectedTile = null;
-        game.getPlayer(currentPlayer).setTokensRemaining(remaining);
+        game.getPlayer(currentPlayer).setStonesRemaining(remaining);
         boardView.invalidate();
 
         drawButton.setEnabled(false);
@@ -463,10 +462,10 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
 
         youStatus.setText(getResources().getString(R.string.you_status,
                 cp.getName(), cp.getTilesInHand(), cp.getTilesInSupply(),
-                cp.getTokensRemaining(), calculateScore(cp)));
+                cp.getStonesRemaining(), calculateScore(cp)));
         opponentStatus.setText(getResources().getString(R.string.opponent_status,
                 op.getName(), op.getTilesInHand(), op.getTilesInSupply(),
-                op.getTokensRemaining(), calculateScore(op)));
+                op.getStonesRemaining(), calculateScore(op)));
         if (yourTurn) {
             status.setText(getResources().getString(R.string.your_turn_status, cp.getName()));
         } else {
@@ -487,8 +486,8 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
             tileView[ii].setVisibility(View.INVISIBLE);
             ++ii;
         }
-        stonesView.setStonesRemaining(cp.getOwner(), cp.getTokensRemaining());
-        if (cp.getTokensRemaining() == 0) {
+        stonesView.setStonesRemaining(cp.getOwner(), cp.getStonesRemaining());
+        if (cp.getStonesRemaining() == 0) {
             stonesView.setVisibility(View.INVISIBLE);
         } else {
             stonesView.setVisibility(View.VISIBLE);
@@ -621,7 +620,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
             Log.d(LOGBIT, "MoveListener got placeStone()!!!");
             checkPlayer(player);
             Player tp = game.getPlayer(expectPlayer);
-            int remaining = tp.getTokensRemaining();
+            int remaining = tp.getStonesRemaining();
             if (remaining < 1) {
 //XXX i18n
                 throw new IllegalPlayException(tp.getName() + " tried to place a stone, but has none available!");
@@ -636,7 +635,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
                 throw new IllegalPlayException(tp.getName() + " tried to place a stone on a group which is already owned!");
             }
             game.getBoard().playStone(group, expectPlayer);
-            tp.setTokensRemaining(remaining - 1);
+            tp.setStonesRemaining(remaining - 1);
             returnToOtherPlayer();
         }
 

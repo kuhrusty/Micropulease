@@ -73,7 +73,7 @@ public class OptiBot implements Bot {
         //  Checking for unclaimed, closed groups is fast...
         int bestGroup = -1;
         int bestGroupScore = 0;
-        if (self.getTokensRemaining() > 0) {
+        if (self.getStonesRemaining() > 0) {
             for (int ii = 0; ii < board.getGroupCount(); ++ii) {
                 Group tg = board.getGroupByID(ii);
                 if (tg.isClosed() && (tg.getOwner().equals(Owner.Nobody)) &&

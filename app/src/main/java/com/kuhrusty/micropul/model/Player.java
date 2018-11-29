@@ -84,10 +84,10 @@ public class Player {
     public void setTilesInSupply(int supply) {
         this.supply = supply;
     }
-    public int getTokensRemaining() {
+    public int getStonesRemaining() {
         return tokens;
     }
-    public void setTokensRemaining(int remaining) {
+    public void setStonesRemaining(int remaining) {
         tokens = remaining;
     }
     public int getScore() {
