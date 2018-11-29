@@ -679,10 +679,6 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (game.coreSize() == 0) {
-                        gameOver();
-                        return;
-                    }
                     if (selectedTile != null) {
                         selectedTile.setSelected(false);
                         selectedTile = null;
@@ -690,6 +686,10 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
                     boardView.setSelectedTile(null);
                     currentPlayer = currentPlayer.equals(Owner.P1) ? Owner.P2 : Owner.P1;
                     updateStatus();
+                    if (game.coreSize() == 0) {
+                        gameOver();
+                        return;
+                    }
                 }
             });
         }
