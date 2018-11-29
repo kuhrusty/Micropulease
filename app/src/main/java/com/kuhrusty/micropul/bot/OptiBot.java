@@ -6,7 +6,6 @@ import com.kuhrusty.micropul.MoveListener;
 import com.kuhrusty.micropul.R;
 import com.kuhrusty.micropul.model.Board;
 import com.kuhrusty.micropul.model.Group;
-import com.kuhrusty.micropul.model.Opponent;
 import com.kuhrusty.micropul.model.Owner;
 import com.kuhrusty.micropul.model.Player;
 import com.kuhrusty.micropul.model.Tile;
@@ -63,7 +62,7 @@ public class OptiBot implements Bot {
     }
 
     @Override
-    public void takeTurn(Player self, Opponent opponent, Board board, MoveListener listener) {
+    public void takeTurn(Player self, Player opponent, Board board, MoveListener listener) {
         //  Always draw a tile if we can.
         if ((self.getTilesInHand() < 6) && (self.getTilesInSupply() > 0)) {
             listener.drawTile(self);

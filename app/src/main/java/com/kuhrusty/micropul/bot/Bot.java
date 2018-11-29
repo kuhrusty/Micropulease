@@ -2,7 +2,6 @@ package com.kuhrusty.micropul.bot;
 
 import com.kuhrusty.micropul.MoveListener;
 import com.kuhrusty.micropul.model.Board;
-import com.kuhrusty.micropul.model.Opponent;
 import com.kuhrusty.micropul.model.Player;
 
 public interface Bot {
@@ -35,5 +34,5 @@ public interface Bot {
      * @param listener the listener who should be notified when the move is
      *                 decided on.
      */
-    void takeTurn(Player self, Opponent opponent, Board board, MoveListener listener);
+    void takeTurn(Player self, Player opponent, Board board, MoveListener listener);
 }

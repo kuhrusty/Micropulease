@@ -106,6 +106,15 @@ public class Player {
         return owner;
     }
 
+    /**
+     * Removes information which an opponent bot shouldn't get to see, such as
+     * the actual tiles in hand.  This replaces all tiles in hand with nulls,
+     * so getTile(int) will return null, removeTileByID(int) will fail, etc.
+     */
+    public void prepareForOpponent() {
+        for (int ii = 0; ii < hand.size(); ++ii) hand.set(ii, null);
+    }
+
     private Owner owner;  //  bluhh, just whether they're P1 or P2.
     private String name;
     private String type;

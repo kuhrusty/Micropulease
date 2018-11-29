@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import com.kuhrusty.micropul.MoveListener;
 import com.kuhrusty.micropul.R;
 import com.kuhrusty.micropul.model.Board;
-import com.kuhrusty.micropul.model.Opponent;
 import com.kuhrusty.micropul.model.Player;
 import com.kuhrusty.micropul.model.Tile;
 
@@ -29,7 +28,7 @@ public class DumbBot implements Bot {
     }
 
     @Override
-    public void takeTurn(Player self, Opponent opponent, Board board, MoveListener listener) {
+    public void takeTurn(Player self, Player opponent, Board board, MoveListener listener) {
         if (self.getTilesInHand() == 0) {
             if (self.getTilesInSupply() > 0) {
                 listener.drawTile(self);

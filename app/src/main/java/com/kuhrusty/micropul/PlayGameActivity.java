@@ -16,7 +16,6 @@ import com.kuhrusty.micropul.model.GameState;
 import com.kuhrusty.micropul.model.Group;
 import com.kuhrusty.micropul.model.IllegalPlayException;
 import com.kuhrusty.micropul.model.IntCoordinates;
-import com.kuhrusty.micropul.model.Opponent;
 import com.kuhrusty.micropul.model.Owner;
 import com.kuhrusty.micropul.model.Player;
 import com.kuhrusty.micropul.model.Tile;
@@ -521,7 +520,8 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
 
         final Bot fb = bot;
         final Player fp = new Player(cp);
-        final Opponent fo = new Opponent(op);
+        final Player fo = new Player(op);
+        fo.prepareForOpponent();
         final Board fb2 = new Board(game.getBoard());
         final MoveListener fml = new MoveListenerImpl(currentPlayer);
         if (newThread) {
