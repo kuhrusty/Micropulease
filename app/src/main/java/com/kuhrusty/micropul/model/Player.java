@@ -115,6 +115,22 @@ public class Player {
         for (int ii = 0; ii < hand.size(); ++ii) hand.set(ii, null);
     }
 
+    /**
+     * Note that this doesn't <i>set</i> the player's score; it just tells you
+     * what the player's score <i>would</i> be, given the board.
+     *
+     * @param board must not be null.
+     */
+    public int calculateScore(Board board) {
+        int rv = getTilesInHand();
+        rv += getTilesInSupply() * 2;
+        for (int ii = 1; ii < board.getGroupCount(); ++ii) {
+            Group tg = board.getGroupByID(ii);
+            if (tg.isClosed() && tg.getOwner().equals(owner)) rv += tg.getPointValue();
+        }
+        return rv;
+    }
+
     private Owner owner;  //  bluhh, just whether they're P1 or P2.
     private String name;
     private String type;

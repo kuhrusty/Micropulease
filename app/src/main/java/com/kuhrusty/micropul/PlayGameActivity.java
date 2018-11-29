@@ -242,8 +242,8 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
      * board state; instead it just croaks the Activity.
      */
     private void gameOver() {
-        int p1score = calculateScore(game.getPlayer1());
-        int p2score = calculateScore(game.getPlayer2());
+        int p1score = game.getPlayer1().calculateScore(game.getBoard());
+        int p2score = game.getPlayer2().calculateScore(game.getBoard());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (p1score == p2score) {
             builder.setTitle(R.string.game_over_tie_title);
@@ -433,18 +433,6 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
                 .show();
     }
 
-    private int calculateScore(Player player) {
-        int rv = player.getTilesInHand();
-        rv += player.getTilesInSupply() * 2;
-        Owner owner = (player == game.getPlayer1()) ? Owner.P1 : Owner.P2;
-        Board tb = game.getBoard();
-        for (int ii = 1; ii < tb.getGroupCount(); ++ii) {
-            Group tg = tb.getGroupByID(ii);
-            if (tg.isClosed() && tg.getOwner().equals(owner)) rv += tg.getPointValue();
-        }
-        return rv;
-    }
-
     private void updateStatus() {
         Log.d(LOGBIT, "updateStatus, current player " + currentPlayer +
                 ", hotseat " + game.getPlayer(currentPlayer).isHotSeat());
@@ -461,10 +449,10 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
 
         youStatus.setText(getResources().getString(R.string.you_status,
                 cp.getName(), cp.getTilesInHand(), cp.getTilesInSupply(),
-                cp.getStonesRemaining(), calculateScore(cp)));
+                cp.getStonesRemaining(), cp.calculateScore(game.getBoard())));
         opponentStatus.setText(getResources().getString(R.string.opponent_status,
                 op.getName(), op.getTilesInHand(), op.getTilesInSupply(),
-                op.getStonesRemaining(), calculateScore(op)));
+                op.getStonesRemaining(), op.calculateScore(game.getBoard())));
         if (yourTurn) {
             status.setText(getResources().getString(R.string.your_turn_status, cp.getName()));
         } else {
