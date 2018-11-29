@@ -57,6 +57,8 @@ public class CarthaginianRenderer1 extends BaseBoardPlus2Renderer {
     @Override
     public void prepare() {
         bgPaint = newPaint(Color.GRAY);
+        bgGridPaint = newPaint(Color.LTGRAY, Paint.Style.STROKE);
+        bgGridPaint.setStrokeWidth(1.0f);
         tileBGPaint = newPaint(Color.BLACK);
         tileBlackPaint = newPaint(0xff0080ff, Paint.Style.STROKE);
         tileWhitePaint = newPaint(0xff00bb00, Paint.Style.STROKE);

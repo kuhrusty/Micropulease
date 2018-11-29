@@ -22,6 +22,10 @@ public abstract class BaseBoardPlus2Renderer implements TileRenderer {
      */
     protected Paint bgPaint = null;
     /**
+     * If not null, paints tile grid lines in the background of the board area.
+     */
+    protected Paint bgGridPaint = null;
+    /**
      * If not null, paints the background of squares where the selected tile can
      * be played.
      */
@@ -76,6 +80,16 @@ public abstract class BaseBoardPlus2Renderer implements TileRenderer {
         int viewRows = board.getHeight() + 2;
         int viewCols = board.getWidth() + 2;
         int tilesize = boardTileSize(board, rect);
+        if (bgGridPaint != null) {
+            for (int viewRow = 1; viewRow <= viewRows; ++viewRow) {
+                int ty = viewRow * tilesize;
+                canvas.drawLine(0, ty, viewCols * tilesize, ty, bgGridPaint);
+            }
+            for (int viewCol = 1; viewCol <= viewCols; ++viewCol) {
+                int tx = viewCol * tilesize;
+                canvas.drawLine(tx, 0, tx, viewRows * tilesize, bgGridPaint);
+            }
+        }
         for (int viewRow = 0; viewRow < viewRows; ++viewRow) {
             int boardRow = viewRowToBoardRow(board, viewRow);//viewRows - viewRow - 2;
             int br2 = boardRow * 2;

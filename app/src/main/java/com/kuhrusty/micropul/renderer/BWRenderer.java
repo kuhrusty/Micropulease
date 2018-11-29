@@ -32,6 +32,8 @@ public class BWRenderer extends BaseBoardPlus2Renderer {
     @Override
     public void prepare() {
         bgPaint = newPaint(Color.GRAY);
+        bgGridPaint = newPaint(Color.LTGRAY, Paint.Style.STROKE);
+        bgGridPaint.setStrokeWidth(1.0f);
         tileBGPaint = newPaint(Color.LTGRAY);
         tileBlackPaint = newPaint(Color.BLACK);
         tileWhitePaint = newPaint(Color.WHITE);
