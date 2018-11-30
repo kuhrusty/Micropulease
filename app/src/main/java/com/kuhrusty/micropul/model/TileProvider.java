@@ -55,4 +55,21 @@ public interface TileProvider {
      * used to exist but which were later merged into other groups.
      */
     Group getGroupByID(int id);
+
+    /**
+     * Returns the ID of the tile at the given position in the board, or -1.
+     *
+     * @param tileX
+     * @param tileY
+     */
+    int getTileID(int tileX, int tileY);
+
+    /**
+     * Returns the rotation (-1, 0, 1, 2) of the tile at the given position in
+     * the board, or 0.
+     *
+     * @param tileX
+     * @param tileY
+     */
+    int getTileRotation(int tileX, int tileY);
 }

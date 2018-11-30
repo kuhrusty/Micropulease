@@ -76,5 +76,15 @@ public class SingleTileWrapper implements TileProvider {
         return Group.None;
     }
 
+    @Override
+    public int getTileID(int tileX, int tileY) {
+        return ((tileX == 0) && (tileY == 0)) ? tile.getID() : -1;
+    }
+
+    @Override
+    public int getTileRotation(int tileX, int tileY) {
+        return ((tileX == 0) && (tileY == 0)) ? tile.getRotation() : 0;
+    }
+
     private Tile tile;
 }

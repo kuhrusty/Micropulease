@@ -32,10 +32,22 @@ public class Board implements TileProvider {
     private static class SquareAndGroup {
         Square square;
         Group group;
-        public SquareAndGroup(Square square, Group group) {
+        int tileID = -1;  //  will be the same for all four entries in a tile.
+        int rotation = 0;  //  will be the same for all four entries in a tile.
+        public SquareAndGroup(Square square, Group group, Tile tile) {
             if (square == null) throw new NullPointerException();
             this.square = square;
             this.group = group;
+            if (tile != null) {
+                tileID = tile.getID();
+                rotation = tile.getRotation();
+            }
+        }
+        public SquareAndGroup(SquareAndGroup other) {
+            square = other.square;
+            group = other.group;
+            tileID = other.tileID;
+            rotation = other.rotation;
         }
     }
 
@@ -52,10 +64,10 @@ public class Board implements TileProvider {
         w1.grow(2, 2);
         groups.add(w1);
         squares = new SquareAndGroup[2][2];
-        squares[0][0] = new SquareAndGroup(Square.Black, b1);
-        squares[0][1] = new SquareAndGroup(Square.Black, b1);
-        squares[1][0] = new SquareAndGroup(Square.White, w1);
-        squares[1][1] = new SquareAndGroup(Square.White, w1);
+        squares[0][0] = new SquareAndGroup(Square.Black, b1, null);
+        squares[0][1] = new SquareAndGroup(Square.Black, b1, null);
+        squares[1][0] = new SquareAndGroup(Square.White, w1, null);
+        squares[1][1] = new SquareAndGroup(Square.White, w1, null);
         height = 1;
         width = 1;
     }
@@ -76,7 +88,7 @@ public class Board implements TileProvider {
             //System.arraycopy(other.squares[ii], 0, squares[ii], 0, h2);
             for (int jj = 0; jj < h2; ++jj) {
                 SquareAndGroup sag = other.squares[ii][jj];
-                if (sag != null) squares[ii][jj] = new SquareAndGroup(sag.square, sag.group);
+                if (sag != null) squares[ii][jj] = new SquareAndGroup(sag);
             }
         }
         groups = new ArrayList<>(other.groups.size());
@@ -433,10 +445,10 @@ public class Board implements TileProvider {
             height = newHeight;
         }
         //  Slap the new squares into the board.
-        squares[xpos * 2][ypos * 2 + 1] = new SquareAndGroup(tile.getUpperLeft(), null);
-        squares[xpos * 2 + 1][ypos * 2 + 1] = new SquareAndGroup(tile.getUpperRight(), null);
-        squares[xpos * 2][ypos * 2] = new SquareAndGroup(tile.getLowerLeft(), null);
-        squares[xpos * 2 + 1][ypos * 2] = new SquareAndGroup(tile.getLowerRight(), null);
+        squares[xpos * 2][ypos * 2 + 1] = new SquareAndGroup(tile.getUpperLeft(), null, tile);
+        squares[xpos * 2 + 1][ypos * 2 + 1] = new SquareAndGroup(tile.getUpperRight(), null, tile);
+        squares[xpos * 2][ypos * 2] = new SquareAndGroup(tile.getLowerLeft(), null, tile);
+        squares[xpos * 2 + 1][ypos * 2] = new SquareAndGroup(tile.getLowerRight(), null, tile);
 
         //  issue #6 - during initialization, we're playing the start tile into
         //  the middle of the board, stomping the original initial tile, which
@@ -704,6 +716,18 @@ public class Board implements TileProvider {
     @Override
     public Group getGroupByID(int id) {
         return (id < groups.size()) ? groups.get(id) : Group.None;
+    }
+
+    @Override
+    public int getTileID(int tileX, int tileY) {
+        SquareAndGroup rv = get(tileX * 2, tileY * 2);
+        return (rv != null) ? rv.tileID : -1;
+    }
+
+    @Override
+    public int getTileRotation(int tileX, int tileY) {
+        SquareAndGroup rv = get(tileX * 2, tileY * 2);
+        return (rv != null) ? rv.rotation : 0;
     }
 
     private int height;  //  in tiles, not squares
