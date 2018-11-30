@@ -24,6 +24,7 @@
 
     <string name="bw_renderer_name">Black &amp; White</string>
     <string name="carthaginian1_renderer_name">Carthaginian 1</string>
+    <string name="classic_renderer_name">Classic</string>
 
     <string name="switch_player_title">Swap Device</string>
     <!--

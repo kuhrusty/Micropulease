@@ -1,5 +1,6 @@
 package com.kuhrusty.micropul;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.kuhrusty.micropul.renderer.BWRenderer;
 import com.kuhrusty.micropul.renderer.CarthaginianRenderer1;
+import com.kuhrusty.micropul.renderer.ClassicRenderer;
 
 /**
  * A not-very-pretty activity which just gathers the information needed to
@@ -27,11 +29,12 @@ public class StartGameActivity extends AppCompatActivity {
 
     private static TileRenderer[] renderers = null;
 
-    static TileRenderer[] getTileRenderers(Resources res) {
+    static TileRenderer[] getTileRenderers(Context context) {
         if (renderers == null) {
             renderers = new TileRenderer[] {
-                    new BWRenderer(res),
-                    new CarthaginianRenderer1(res),
+                    new ClassicRenderer(context),
+                    new BWRenderer(context.getResources()),
+                    new CarthaginianRenderer1(context.getResources()),
             };
         }
         return renderers;
@@ -119,14 +122,14 @@ public class StartGameActivity extends AppCompatActivity {
         Spinner renderer = findViewById(R.id.themeSpinner);
         //  blugh.
         ArrayAdapter<TileRenderer> trAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, getTileRenderers(getResources()));
+                android.R.layout.simple_spinner_item, getTileRenderers(this));
         trAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         renderer.setAdapter(trAdapter);
         renderer.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 Log.d(LOGBIT, "renderer item selected");
-                TileRenderer[] tra = getTileRenderers(getResources());
+                TileRenderer[] tra = getTileRenderers(StartGameActivity.this);
                 if (pos < tra.length) {
                     selectedRenderer = tra[pos];
                     int id = selectedRenderer.getPreviewDrawableID();

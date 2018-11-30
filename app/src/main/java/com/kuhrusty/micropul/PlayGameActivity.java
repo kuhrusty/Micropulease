@@ -339,7 +339,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
 
         TileRenderer renderer = null;
         if (rendererName != null) {
-            TileRenderer[] tra = StartGameActivity.getTileRenderers(getResources());
+            TileRenderer[] tra = StartGameActivity.getTileRenderers(this);
             for (int ii = 0; ii < tra.length; ++ii) {
                 if (rendererName.equals(tra[ii].toString())) {
                     renderer = tra[ii];
