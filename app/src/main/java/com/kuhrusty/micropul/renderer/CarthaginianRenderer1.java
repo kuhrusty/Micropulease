@@ -34,12 +34,6 @@ public class CarthaginianRenderer1 extends BaseBoardPlus2Renderer {
     private Paint catalystFillPaint;
     private Paint catalystSymbolPaint;
 
-    private Paint p1StonePaint;
-    private Paint p2StonePaint;
-    private Paint p1GroupPaint;
-    private Paint p2GroupPaint;
-    private Paint bothGroupPaint;
-
     /**  Returns tileBlackPaint, tileWhitePaint, catalystPaint, or null */
     private PaintChooser micropulPaintChooser;
     /**  Returns p1GroupPaint, p2GroupPaint, bothGroupPaint, or null. */
@@ -294,22 +288,4 @@ public class CarthaginianRenderer1 extends BaseBoardPlus2Renderer {
     //protected void drawValidTilePlay(Board board, int xpos, int ypos, Rect rect, Canvas canvas) {
     //ehh... was going to do something fancy here, but...
     //}
-
-    @Override
-    public void drawStones(Owner owner, int stones, Rect rect, boolean isSelected, Canvas canvas) {
-        Paint stonePaint = owner.equals(Owner.P1) ? p1StonePaint : p2StonePaint;
-        float r = rect.width() / 6;
-        if (stones == 3) {
-            canvas.drawCircle(rect.left + r, rect.top + r, r, stonePaint);
-            canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, r, stonePaint);
-            canvas.drawCircle(rect.left + rect.right - r, rect.top + rect.bottom - r, r, stonePaint);
-        } else if (stones == 2) {
-            float r4 = rect.width() / 4;
-            canvas.drawCircle(rect.left + r4, rect.top + r4, r, stonePaint);
-            canvas.drawCircle(rect.left + rect.right - r4, rect.top + rect.bottom - r4, r, stonePaint);
-        } else if (stones == 1) {
-            canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, r, stonePaint);
-        }
-        if (isSelected) canvas.drawRect(rect, tileValidPaint);
-    }
 }

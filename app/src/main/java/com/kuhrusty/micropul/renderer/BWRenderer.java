@@ -8,7 +8,6 @@ import android.graphics.Rect;
 import android.util.Log;
 
 import com.kuhrusty.micropul.R;
-import com.kuhrusty.micropul.model.Owner;
 import com.kuhrusty.micropul.model.Square;
 import com.kuhrusty.micropul.model.TileProvider;
 
@@ -19,11 +18,6 @@ public class BWRenderer extends BaseBoardPlus2Renderer {
     private Paint tileBlackPaint;
     private Paint tileWhitePaint;
     private Paint catalystPaint;
-    private Paint p1StonePaint;
-    private Paint p2StonePaint;
-    private Paint p1GroupPaint;
-    private Paint p2GroupPaint;
-    private Paint bothGroupPaint;
 
     public BWRenderer(Resources res) {
         super(res.getString(R.string.bw_renderer_name), R.drawable.preview_bwrenderer);
@@ -88,7 +82,7 @@ public class BWRenderer extends BaseBoardPlus2Renderer {
         }
         rect.set(oldRectLeft, oldRectTop, oldRectRight, oldRectBottom);
         if (isSelected) canvas.drawRect(rect, tileValidPaint);
-        drawGroups(board, xpos, ypos, rect, canvas);
+        drawGroups(board, sqx, sqy, rect, canvas);
     }
 
     /**
@@ -116,65 +110,5 @@ public class BWRenderer extends BaseBoardPlus2Renderer {
                 //Log.w(LOGBIT, "don't know what to do what to do with " + square);
             }
         }
-    }
-
-    private Paint ownerToPaint(Owner owner) {
-        if ((owner == null) || owner.equals(Owner.Nobody)) return null;
-        if (owner.equals(Owner.P1)) return p1GroupPaint;
-        if (owner.equals(Owner.P2)) return p2GroupPaint;
-        if (owner.equals(Owner.Both)) return bothGroupPaint;
-        //Log.w(LOGBIT, "unhandled owner " + owner);
-        return null;
-    }
-
-    /**
-     * Rather than draw nice borders, this shades the owned squares.
-     */
-    private void drawGroups(TileProvider board, int xpos, int ypos, Rect rect, Canvas canvas) {
-        int sqx = xpos * 2;
-        int sqy = ypos * 2;
-        Paint paint;
-        if (board.getSquare(sqx, sqy).isBig()) {
-            paint = ownerToPaint(board.getOwner(sqx, sqy));
-            if (paint != null) {
-                canvas.drawRect(rect, paint);
-            }
-            return;
-        }
-        float p2 = rect.height() / 2;
-        if (board.getSquare(sqx, sqy + 1).isMicropul() &&
-            ((paint = ownerToPaint(board.getOwner(sqx, sqy + 1))) != null)) {
-            canvas.drawRect(rect.left, rect.top, rect.left + p2, rect.top + p2, paint);
-        }
-        if (board.getSquare(sqx + 1, sqy + 1).isMicropul() &&
-            ((paint = ownerToPaint(board.getOwner(sqx + 1, sqy + 1))) != null)) {
-            canvas.drawRect(rect.left + p2, rect.top, rect.right, rect.top + p2, paint);
-        }
-        if (board.getSquare(sqx, sqy).isMicropul() &&
-            ((paint = ownerToPaint(board.getOwner(sqx, sqy))) != null)) {
-            canvas.drawRect(rect.left, rect.top + p2, rect.left + p2, rect.bottom, paint);
-        }
-        if (board.getSquare(sqx + 1, sqy).isMicropul() &&
-            ((paint = ownerToPaint(board.getOwner(sqx + 1, sqy))) != null)) {
-            canvas.drawRect(rect.left + p2, rect.top + p2, rect.right, rect.bottom, paint);
-        }
-    }
-
-    @Override
-    public void drawStones(Owner owner, int stones, Rect rect, boolean isSelected, Canvas canvas) {
-        Paint stonePaint = owner.equals(Owner.P1) ? p1StonePaint : p2StonePaint;
-        float r = rect.width() / 6;
-        if (stones == 3) {
-            canvas.drawCircle(rect.left + r, rect.top + r, r, stonePaint);
-            canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, r, stonePaint);
-            canvas.drawCircle(rect.left + rect.right - r, rect.top + rect.bottom - r, r, stonePaint);
-        } else if (stones == 2) {
-            float r4 = rect.width() / 4;
-            canvas.drawCircle(rect.left + r4, rect.top + r4, r, stonePaint);
-            canvas.drawCircle(rect.left + rect.right - r4, rect.top + rect.bottom - r4, r, stonePaint);
-        } else if (stones == 1) {
-            canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, r, stonePaint);
-        }
-        if (isSelected) canvas.drawRect(rect, tileValidPaint);
     }
 }

@@ -9,6 +9,7 @@ import com.kuhrusty.micropul.model.Board;
 import com.kuhrusty.micropul.model.IntCoordinates;
 import com.kuhrusty.micropul.model.Owner;
 import com.kuhrusty.micropul.model.Tile;
+import com.kuhrusty.micropul.model.TileProvider;
 
 /**
  * This base class draws tiles as big as possible given the available area,
@@ -30,6 +31,31 @@ public abstract class BaseBoardPlus2Renderer implements TileRenderer {
      * be played.
      */
     protected Paint tileValidPaint = null;
+
+    /**
+     * If not null, this will be used by drawGroups() to paint a crude square
+     * over groups owned by player 1.
+     */
+    protected Paint p1GroupPaint;
+    /**
+     * If not null, this will be used by drawGroups() to paint a crude square
+     * over groups owned by player 2.
+     */
+    protected Paint p2GroupPaint;
+    /**
+     * If not null, this will be used by drawGroups() to paint a crude square
+     * over groups owned by both players.
+     */
+    protected Paint bothGroupPaint;
+
+    /**
+     * If not null, this will be used by drawStones().
+     */
+    protected Paint p1StonePaint;
+    /**
+     * If not null, this will be used by drawStones().
+     */
+    protected Paint p2StonePaint;
 
     /**
      * Returns the name passed into the constructor.
@@ -175,6 +201,80 @@ public abstract class BaseBoardPlus2Renderer implements TileRenderer {
      */
     protected void drawValidTilePlay(Board board, int xpos, int ypos, Rect rect, Canvas canvas) {
         if (tileValidPaint != null) canvas.drawRect(rect, tileValidPaint);
+    }
+
+    /**
+     * This is for use by drawTile() implementations after drawing the tile
+     * image; if p1GroupPaint, p2GroupPaint, and bothGroupPaint are not null,
+     * this just fills each owned square with those paints.
+     */
+    protected void drawGroups(TileProvider board, int sqx, int sqy, Rect rect, Canvas canvas) {
+        Paint paint;
+        if (board.getSquare(sqx, sqy).isBig()) {
+            paint = ownerToPaint(board.getOwner(sqx, sqy));
+            if (paint != null) {
+                canvas.drawRect(rect, paint);
+            }
+            return;
+        }
+        float p2 = rect.height() / 2;
+        if (board.getSquare(sqx, sqy + 1).isMicropul() &&
+                ((paint = ownerToPaint(board.getOwner(sqx, sqy + 1))) != null)) {
+            canvas.drawRect(rect.left, rect.top, rect.left + p2, rect.top + p2, paint);
+        }
+        if (board.getSquare(sqx + 1, sqy + 1).isMicropul() &&
+                ((paint = ownerToPaint(board.getOwner(sqx + 1, sqy + 1))) != null)) {
+            canvas.drawRect(rect.left + p2, rect.top, rect.right, rect.top + p2, paint);
+        }
+        if (board.getSquare(sqx, sqy).isMicropul() &&
+                ((paint = ownerToPaint(board.getOwner(sqx, sqy))) != null)) {
+            canvas.drawRect(rect.left, rect.top + p2, rect.left + p2, rect.bottom, paint);
+        }
+        if (board.getSquare(sqx + 1, sqy).isMicropul() &&
+                ((paint = ownerToPaint(board.getOwner(sqx + 1, sqy))) != null)) {
+            canvas.drawRect(rect.left + p2, rect.top + p2, rect.right, rect.bottom, paint);
+        }
+    }
+
+    private Paint ownerToPaint(Owner owner) {
+        if ((owner == null) || owner.equals(Owner.Nobody)) return null;
+        if (owner.equals(Owner.P1)) return p1GroupPaint;
+        if (owner.equals(Owner.P2)) return p2GroupPaint;
+        if (owner.equals(Owner.Both)) return bothGroupPaint;
+        //Log.w(LOGBIT, "unhandled owner " + owner);
+        return null;
+    }
+
+    /**
+     * Implemented to just draw one circle per remaining stone, in either
+     * p1StonePaint or p2StonePaint.  This is garbage, but at least it produces
+     * something usable.
+     *
+     * @param owner Owner.P1 or Owner.P2.
+     * @param stones the number of stones remaining.
+     * @param rect the area to draw in.
+     * @param isSelected true if the player has selected the view being drawn,
+     *                   suggesting that they're considering playing a stone
+     *                   instead of a tile.
+     * @param canvas
+     */
+    @Override
+    public void drawStones(Owner owner, int stones, Rect rect, boolean isSelected, Canvas canvas) {
+        Paint stonePaint = owner.equals(Owner.P1) ? p1StonePaint : p2StonePaint;
+        if (stonePaint == null) return;
+        float r = rect.width() / 6;
+        if (stones == 3) {
+            canvas.drawCircle(rect.left + r, rect.top + r, r, stonePaint);
+            canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, r, stonePaint);
+            canvas.drawCircle(rect.left + rect.right - r, rect.top + rect.bottom - r, r, stonePaint);
+        } else if (stones == 2) {
+            float r4 = rect.width() / 4;
+            canvas.drawCircle(rect.left + r4, rect.top + r4, r, stonePaint);
+            canvas.drawCircle(rect.left + rect.right - r4, rect.top + rect.bottom - r4, r, stonePaint);
+        } else if (stones == 1) {
+            canvas.drawCircle(rect.left + rect.width() / 2, rect.top + rect.height() / 2, r, stonePaint);
+        }
+        if (isSelected) canvas.drawRect(rect, tileValidPaint);
     }
 
     @Override
