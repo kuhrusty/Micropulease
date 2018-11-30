@@ -141,33 +141,29 @@ public class Board implements TileProvider {
         return height;
     }
 
-    @Override
-    public Square getSquare(int squareX, int squareY) {
+    private SquareAndGroup get(int squareX, int squareY) {
         if ((squareX < 0) || (squareX >= squares.length) ||
             (squareY < 0) || (squareY >= squares[squareX].length)) {
-            return Square.Null;
+            return null;
         }
-        SquareAndGroup rv = squares[squareX][squareY];
+        return squares[squareX][squareY];
+    }
+
+    @Override
+    public Square getSquare(int squareX, int squareY) {
+        SquareAndGroup rv = get(squareX, squareY);
         return (rv != null) ? rv.square : Square.Null;
     }
 
     @Override
     public Owner getOwner(int squareX, int squareY) {
-        if ((squareX < 0) || (squareX >= squares.length) ||
-            (squareY < 0) || (squareY >= squares[squareX].length)) {
-            return Owner.Nobody;
-        }
-        SquareAndGroup rv = squares[squareX][squareY];
+        SquareAndGroup rv = get(squareX, squareY);
         return ((rv != null) && (rv.group != null)) ? rv.group.getOwner() : Owner.Nobody;
     }
 
     @Override
     public Group getGroup(int squareX, int squareY) {
-        if ((squareX < 0) || (squareX >= squares.length) ||
-            (squareY < 0) || (squareY >= squares[squareX].length)) {
-            return Group.None;
-        }
-        SquareAndGroup rv = squares[squareX][squareY];
+        SquareAndGroup rv = get(squareX, squareY);
         return ((rv != null) && (rv.group != null)) ? rv.group : Group.None;
     }
 
