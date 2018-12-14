@@ -47,7 +47,9 @@ Currently there's no timer on a bot which takes too long to make a move.
 
 1. copy one of the classes in `com.kuhrusty.micropul.renderer`;
    change its name.
-1. Add it to the list of renderers in `com.kuhrusty.micropul.StartGameActivity.getTileRenderers()`.
+1. Add its name to `app/src/main/res/values/strings.xml`.
+1. Add it to the list of renderers in
+   `com.kuhrusty.micropul.StartGameActivity.getTileRenderers()`.
 
 Build & install the app; confirm that your new renderer shows up in the
 list of available renderers.
