@@ -82,6 +82,12 @@ public class SingleTileWrapper implements TileProvider {
     }
 
     @Override
+    public int getSquareTileID(int squareX, int squareY) {
+        return (((squareX == 0) || (squareX == 1)) &&
+                ((squareY == 0) || (squareY ==1))) ? tile.getID() : -1;
+    }
+
+    @Override
     public int getTileRotation(int tileX, int tileY) {
         return ((tileX == 0) && (tileY == 0)) ? tile.getRotation() : 0;
     }

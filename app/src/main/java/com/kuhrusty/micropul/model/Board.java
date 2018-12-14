@@ -725,6 +725,12 @@ public class Board implements TileProvider {
     }
 
     @Override
+    public int getSquareTileID(int squareX, int squareY) {
+        SquareAndGroup rv = get(squareX, squareY);
+        return (rv != null) ? rv.tileID : -1;
+    }
+
+    @Override
     public int getTileRotation(int tileX, int tileY) {
         SquareAndGroup rv = get(tileX * 2, tileY * 2);
         return (rv != null) ? rv.rotation : 0;

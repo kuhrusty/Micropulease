@@ -65,6 +65,15 @@ public interface TileProvider {
     int getTileID(int tileX, int tileY);
 
     /**
+     * Returns the ID of the tile containing the square at the given position in
+     * the board, or -1.
+     *
+     * @param squareX
+     * @param squareY
+     */
+    int getSquareTileID(int squareX, int squareY);
+
+    /**
      * Returns the rotation (-1, 0, 1, 2) of the tile at the given position in
      * the board, or 0.
      *
