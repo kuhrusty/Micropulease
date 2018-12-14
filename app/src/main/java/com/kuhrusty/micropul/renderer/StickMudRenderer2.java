@@ -331,7 +331,7 @@ public class StickMudRenderer2 extends BaseBoardPlus2Renderer {
         } else if (sq.getTileDraws() == 2) {
             overlay = doubleCatalysts[board.getSquareTileID(sqx, sqy) % doubleCatalysts.length];
         } else if (sq.getExtraTurns() == 1) {
-            overlay = plusCatalyst[board.getSquareTileID(sqx, sqy) % singleCatalysts.length];
+            overlay = plusCatalyst[board.getSquareTileID(sqx, sqy) % plusCatalyst.length];
         } else {
             //Log.w(LOGBIT, "don't know what to do what to do with " + square);
         }
