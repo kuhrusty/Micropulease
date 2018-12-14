@@ -35,9 +35,8 @@ public class BWRenderer extends BaseBoardPlus2Renderer {
         tileValidPaint = newPaint(Color.YELLOW, 63);
         p1StonePaint = newPaint(Color.RED);
         p2StonePaint = newPaint(Color.BLUE);
-        p1GroupPaint = newPaint(Color.RED, 63);
-        p2GroupPaint = newPaint(Color.BLUE, 63);
-        bothGroupPaint = newPaint(0xff00ff, 63);
+        ownerRenderer = new SolidFillOwnerRenderer(newPaint(Color.RED, 63),
+                newPaint(Color.BLUE, 63), newPaint(0xff00ff, 63));
     }
 
     @Override

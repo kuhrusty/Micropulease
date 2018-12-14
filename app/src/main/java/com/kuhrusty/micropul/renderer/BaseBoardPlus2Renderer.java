@@ -33,20 +33,10 @@ public abstract class BaseBoardPlus2Renderer implements TileRenderer {
     protected Paint tileValidPaint = null;
 
     /**
-     * If not null, this will be used by drawGroups() to paint a crude square
-     * over groups owned by player 1.
+     * If not null, this will be used by drawGroups() to paint some indication
+     * of which squares are owned by which players.
      */
-    protected Paint p1GroupPaint;
-    /**
-     * If not null, this will be used by drawGroups() to paint a crude square
-     * over groups owned by player 2.
-     */
-    protected Paint p2GroupPaint;
-    /**
-     * If not null, this will be used by drawGroups() to paint a crude square
-     * over groups owned by both players.
-     */
-    protected Paint bothGroupPaint;
+    protected OwnerRenderer ownerRenderer = null;
 
     /**
      * If not null, this will be used by drawStones().
@@ -205,44 +195,19 @@ public abstract class BaseBoardPlus2Renderer implements TileRenderer {
 
     /**
      * This is for use by drawTile() implementations after drawing the tile
-     * image; if p1GroupPaint, p2GroupPaint, and bothGroupPaint are not null,
-     * this just fills each owned square with those paints.
+     * image; if ownerRenderer is not null, this tells it to paint group
+     * ownership for each square in the tile.
+     *
+     * <p>Note that this takes the coordinates of the lower-left <i>square</i>
+     * in the tile, not the coordinates of the tile itself; despite that, it
+     * operates on all four squares in the tile.  It just takes square
+     * coordinates instead of tile coordinates because all of its operations are
+     * going to be on single squares anyway.</p>
      */
     protected void drawGroups(TileProvider board, int sqx, int sqy, Rect rect, Canvas canvas) {
-        Paint paint;
-        if (board.getSquare(sqx, sqy).isBig()) {
-            paint = ownerToPaint(board.getOwner(sqx, sqy));
-            if (paint != null) {
-                canvas.drawRect(rect, paint);
-            }
-            return;
+        if (ownerRenderer != null) {
+            ownerRenderer.drawOwners(board, sqx, sqy, rect, canvas);
         }
-        float p2 = rect.height() / 2;
-        if (board.getSquare(sqx, sqy + 1).isMicropul() &&
-                ((paint = ownerToPaint(board.getOwner(sqx, sqy + 1))) != null)) {
-            canvas.drawRect(rect.left, rect.top, rect.left + p2, rect.top + p2, paint);
-        }
-        if (board.getSquare(sqx + 1, sqy + 1).isMicropul() &&
-                ((paint = ownerToPaint(board.getOwner(sqx + 1, sqy + 1))) != null)) {
-            canvas.drawRect(rect.left + p2, rect.top, rect.right, rect.top + p2, paint);
-        }
-        if (board.getSquare(sqx, sqy).isMicropul() &&
-                ((paint = ownerToPaint(board.getOwner(sqx, sqy))) != null)) {
-            canvas.drawRect(rect.left, rect.top + p2, rect.left + p2, rect.bottom, paint);
-        }
-        if (board.getSquare(sqx + 1, sqy).isMicropul() &&
-                ((paint = ownerToPaint(board.getOwner(sqx + 1, sqy))) != null)) {
-            canvas.drawRect(rect.left + p2, rect.top + p2, rect.right, rect.bottom, paint);
-        }
-    }
-
-    private Paint ownerToPaint(Owner owner) {
-        if ((owner == null) || owner.equals(Owner.Nobody)) return null;
-        if (owner.equals(Owner.P1)) return p1GroupPaint;
-        if (owner.equals(Owner.P2)) return p2GroupPaint;
-        if (owner.equals(Owner.Both)) return bothGroupPaint;
-        //Log.w(LOGBIT, "unhandled owner " + owner);
-        return null;
     }
 
     /**

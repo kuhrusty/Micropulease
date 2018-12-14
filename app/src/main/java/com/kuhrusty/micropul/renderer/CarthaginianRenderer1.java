@@ -33,6 +33,9 @@ public class CarthaginianRenderer1 extends BaseBoardPlus2Renderer {
     private Paint catalystPaint;
     private Paint catalystFillPaint;
     private Paint catalystSymbolPaint;
+    private Paint p1GroupPaint;
+    private Paint p2GroupPaint;
+    private Paint bothGroupPaint;
 
     /**  Returns tileBlackPaint, tileWhitePaint, catalystPaint, or null */
     private PaintChooser micropulPaintChooser;
