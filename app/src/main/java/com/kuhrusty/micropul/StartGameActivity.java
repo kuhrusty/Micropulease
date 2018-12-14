@@ -19,6 +19,7 @@ import com.kuhrusty.micropul.renderer.BWRenderer;
 import com.kuhrusty.micropul.renderer.CarthaginianRenderer1;
 import com.kuhrusty.micropul.renderer.ClassicRenderer;
 import com.kuhrusty.micropul.renderer.StickMudRenderer1;
+import com.kuhrusty.micropul.renderer.StickMudRenderer2;
 
 /**
  * A not-very-pretty activity which just gathers the information needed to
@@ -36,6 +37,7 @@ public class StartGameActivity extends AppCompatActivity {
                     new BWRenderer(context.getResources()),
                     new CarthaginianRenderer1(context.getResources()),
                     new StickMudRenderer1(context),
+                    new StickMudRenderer2(context),
             };
         }
         return renderers;
