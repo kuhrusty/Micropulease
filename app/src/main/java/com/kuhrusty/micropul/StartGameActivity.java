@@ -3,7 +3,6 @@ package com.kuhrusty.micropul;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import com.kuhrusty.micropul.renderer.BWRenderer;
 import com.kuhrusty.micropul.renderer.CarthaginianRenderer1;
 import com.kuhrusty.micropul.renderer.ClassicRenderer;
+import com.kuhrusty.micropul.renderer.StickMudRenderer1;
 
 /**
  * A not-very-pretty activity which just gathers the information needed to
@@ -35,6 +35,7 @@ public class StartGameActivity extends AppCompatActivity {
                     new ClassicRenderer(context),
                     new BWRenderer(context.getResources()),
                     new CarthaginianRenderer1(context.getResources()),
+                    new StickMudRenderer1(context),
             };
         }
         return renderers;
