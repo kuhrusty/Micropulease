@@ -40,7 +40,9 @@ public abstract class BaseImageRenderer extends BaseBoardPlus2Renderer {
 
     @Override
     public void prepare() {
-        Bitmap allTiles = BitmapFactory.decodeResource(context.getResources(), tileImageID);
+        BitmapFactory.Options bfo = new BitmapFactory.Options();
+        bfo.inScaled = false;  //  issue #14
+        Bitmap allTiles = BitmapFactory.decodeResource(context.getResources(), tileImageID, bfo);
         tiles = imageToTiles(allTiles);
     }
 

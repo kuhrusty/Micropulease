@@ -33,6 +33,7 @@ public class StickMudRenderer2 extends BaseBoardPlus2Renderer {
     private static final String LOGBIT = "StickMudRenderer2";
 
     private Context context;
+    private BitmapFactory.Options bfOpts;
     private Bitmap tileBGs[];
     private Bitmap singleCatalysts[];
     private Bitmap doubleCatalysts[];
@@ -65,6 +66,9 @@ public class StickMudRenderer2 extends BaseBoardPlus2Renderer {
 
     @Override
     public void prepare() {
+        bfOpts = new BitmapFactory.Options();
+        bfOpts.inScaled = false;  //  issue #14
+
         bgPaint = newPaint(0xffc8dd5c);
         bgGridPaint = newPaint(0xff9d6f3d, Paint.Style.STROKE);
         bgGridPaint.setStrokeWidth(1.0f);
@@ -78,7 +82,8 @@ public class StickMudRenderer2 extends BaseBoardPlus2Renderer {
         singleCatalysts = quarter(R.drawable.stick_c1_4);
         doubleCatalysts = quarter(R.drawable.stick_c2_4);
         plusCatalyst = new Bitmap[1];
-        plusCatalyst[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.stick_cp_1);
+        plusCatalyst[0] = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.stick_cp_1, bfOpts);
         Bitmap[] tba = quarter(R.drawable.stick_big);
         //  we, uhh, "know" the order of the images in that file:
         tile36 = tba[0];
@@ -98,7 +103,7 @@ public class StickMudRenderer2 extends BaseBoardPlus2Renderer {
     //                             2  3
     private Bitmap[] quarter(int resID) {
         Bitmap[] rv = new Bitmap[4];
-        Bitmap tb = BitmapFactory.decodeResource(context.getResources(), resID);
+        Bitmap tb = BitmapFactory.decodeResource(context.getResources(), resID, bfOpts);
         if (tb.getHeight() != tb.getWidth()) {
             Log.w(LOGBIT, "quarter() expected square image, got " + tb.getWidth() + " x " + tb.getHeight());
             return rv;
@@ -138,7 +143,7 @@ public class StickMudRenderer2 extends BaseBoardPlus2Renderer {
     //  |        |                      |    |
     //  2 squares                      1 square
     private void explodeNines(int resID, Micropuls mc) {
-        Bitmap tb = BitmapFactory.decodeResource(context.getResources(), resID);
+        Bitmap tb = BitmapFactory.decodeResource(context.getResources(), resID, bfOpts);
         int nines = tb.getWidth() / tb.getHeight();
         mc.upperLeftS = new Bitmap[nines];
         mc.upperS = new Bitmap[nines];
