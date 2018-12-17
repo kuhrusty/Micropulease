@@ -8,18 +8,21 @@ https://github.com/kuhrusty/Micropulease/issues.
 
 - Running the bot on its own thread, and then joining back up to the UI
   thread when the bot makes its move.  (`PlayGameActivity.notifyBot()`)
+- Loading an image from resources, then splitting it up into separate
+  pieces (` BaseImageRenderer.imageToTiles()`,
+  `StickMudRenderer2.quarter()` and `explodeNines()`)
 
 ### Checking it out
 
 In Android Studio 3.2.1:
 
 1. File -> New -> Project from Version Control -> Git
-
-2. Clone Repository:
+1. Clone Repository:
    - URL: https://github.com/kuhrusty/Micropulease.git
    - Directory: (whatever you want; probably
      /home/.../AndroidStudioProjects/Micropulease)
-
+1. That _should_ just build; then you can install on your device using
+   the green triangle-thing in the toolbar.
 
 ### Adding a Bot
 
