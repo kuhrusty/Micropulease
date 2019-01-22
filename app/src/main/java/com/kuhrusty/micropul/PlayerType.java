@@ -26,6 +26,14 @@ public abstract class PlayerType {
                             return null;
                         }
                     },
+                    //  Aaaaand... leave this one second, just in case.
+                    new PlayerType(res.getString(R.string.solitaire_name),
+                            res.getString(R.string.solitaire_descr), false, false) {
+                        @Override
+                        public Bot instantiateBot(Resources res) {
+                            return null;
+                        }
+                    },
                     new PlayerType(res.getString(R.string.dumbbot_name),
                             res.getString(R.string.dumbbot_descr), true, false) {
                         @Override

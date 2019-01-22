@@ -204,8 +204,8 @@ public class PlayGameActivity extends AppCompatActivity implements MediaPlayer.O
         tp.addToHand(game.draw());
         tp.setTilesInSupply(tp.getTilesInSupply() - 1);
 
-currentPlayer = (currentPlayer == Owner.P1) ? Owner.P2 : Owner.P1;
-Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : game.getPlayer2();
+currentPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() != null)) ? Owner.P2 : Owner.P1;
+Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() != null)) ? game.getPlayer1() : game.getPlayer2();
         cancelButton.setEnabled(false);
         okButton.setEnabled(false);
         if ((switchingToPlayer != null) && switchingToPlayer.isHotSeat()) {
@@ -213,7 +213,8 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
             updateStatus();
         } else {
             updateStatus();
-            notifyBot(true);
+            if (game.getPlayer2() != null) notifyBot(true);
+            //  otherwise it's a solitaire game.
         }
     }
 
@@ -223,7 +224,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         savedGame = null;
 
         Player switchingToPlayer = null;
-        if (!extraTurn) {
+        if ((game.getPlayer2() != null) && (!extraTurn)) {
             currentPlayer = (currentPlayer == Owner.P1) ? Owner.P2 : Owner.P1;
             switchingToPlayer = game.getPlayer(currentPlayer);
         }
@@ -281,10 +282,43 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         coreRemaining.setVisibility(View.GONE);
 
         int p1score = game.getPlayer1().calculateScore(game.getBoard());
-        int p2score = game.getPlayer2().calculateScore(game.getBoard());
+        int p2score = (game.getPlayer2() != null) ? game.getPlayer2().calculateScore(game.getBoard()) : 0;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String msg;
-        if (p1score == p2score) {
+        if (game.getPlayer2() == null) {
+            //  Uhhh... the table at
+            //  http://neutralbox.com/micropul/rules.html#solitaire has:
+            //    Beginner  30 - 60
+            //    Normal    60 - 70
+            //    Advanced  80 - 90
+            //    Expert    90 - 100
+            //    Master    100+
+            //  So what's your ranking if your score is 72!?  Let's, uhh... say
+            //  Normal is 60-74, and Advanced is 75-89.
+            int titleResID;
+            int msgResID;
+            if (p1score < 30) {
+                titleResID = R.string.solitaire_sub_beginner_title;
+                msgResID = R.string.solitaire_sub_beginner;
+            } else if (p1score < 60) {
+                titleResID = R.string.solitaire_beginner_title;
+                msgResID = R.string.solitaire_beginner;
+            } else if (p1score < 75) {
+                titleResID = R.string.solitaire_normal_title;
+                msgResID = R.string.solitaire_normal;
+            } else if (p1score < 90) {
+                titleResID = R.string.solitaire_advanced_title;
+                msgResID = R.string.solitaire_advanced;
+            } else if (p1score < 100) {
+                titleResID = R.string.solitaire_expert_title;
+                msgResID = R.string.solitaire_expert;
+            } else {
+                titleResID = R.string.solitaire_master_title;
+                msgResID = R.string.solitaire_master;
+            }
+            builder.setTitle(titleResID);
+            msg = getString(R.string.solitaire_msg, p1score, getString(msgResID));
+        } else if (p1score == p2score) {
             builder.setTitle(R.string.game_over_tie_title);
             msg = getString(R.string.game_over_tie_message, p1score);
         } else if (p1score > p2score) {
@@ -391,12 +425,17 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
             }
         }
         if (p2type == null) p2type = PlayerType.getPlayerTypes(getResources())[0];
+        if ((!p2type.isBot()) && (!p2type.isHotSeat())) {
+            name2 = null;
+        }
 
         if (game == null) {
             game = new GameState();
             game.initGame(name, name2, bot, bot2);
             game.getPlayer1().setHotSeat(p1type.isHotSeat());
-            game.getPlayer2().setHotSeat(p2type.isHotSeat());
+            if (game.getPlayer2() != null) {
+                game.getPlayer2().setHotSeat(p2type.isHotSeat());
+            }
         }
 
         setContentView(R.layout.activity_play_game);
@@ -429,8 +468,13 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         okButton = findViewById(R.id.okButton);
         okButton.setEnabled(false);
 
-        readPrefs(rendererName);
+        if (game.getPlayer2() == null) {
+            //  solitaire game
+            opponentStatus.setVisibility(View.GONE);
+            status.setVisibility(View.GONE);
+        }
 
+        readPrefs(rendererName);
         //  When people hit the volume buttons, we want to change the media
         //  volume, not the ringtone volume.
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -586,7 +630,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         //  well... "cp" used to mean "current player," but if the current
         //  player is a bot, we want to leave it showing the human's stuff.
         boolean yourTurn = true;
-        if (!cp.isHotSeat()) {
+        if ((op != null) && (!cp.isHotSeat())) {
             yourTurn = false;
             cp = op;
             op = game.getPlayer(currentPlayer);
@@ -595,13 +639,15 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         youStatus.setText(getResources().getString(R.string.you_status,
                 cp.getName(), cp.getTilesInHand(), cp.getTilesInSupply(),
                 cp.getStonesRemaining(), cp.calculateScore(game.getBoard())));
-        opponentStatus.setText(getResources().getString(R.string.opponent_status,
-                op.getName(), op.getTilesInHand(), op.getTilesInSupply(),
-                op.getStonesRemaining(), op.calculateScore(game.getBoard())));
-        if (yourTurn) {
-            status.setText(getResources().getString(R.string.your_turn_status, cp.getName()));
-        } else {
-            status.setText(getResources().getString(R.string.their_turn_status, op.getName()));
+        if (op != null) {
+            opponentStatus.setText(getResources().getString(R.string.opponent_status,
+                    op.getName(), op.getTilesInHand(), op.getTilesInSupply(),
+                    op.getStonesRemaining(), op.calculateScore(game.getBoard())));
+            if (yourTurn) {
+                status.setText(getResources().getString(R.string.your_turn_status, cp.getName()));
+            } else {
+                status.setText(getResources().getString(R.string.their_turn_status, op.getName()));
+            }
         }
         coreRemaining.setText(getResources().getString(R.string.core_remaining, game.coreSize()));
         int ii = 0;

@@ -5,6 +5,8 @@ format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 #### Added
+- Add solitaire mode
+  ([Issue #19](https://github.com/kuhrusty/Micropulease/issues/19)).
 - Add the ability to swap renderers during play
   ([Issue #9](https://github.com/kuhrusty/Micropulease/issues/9)).  As
   part of this, add a Settings activity.

@@ -34,7 +34,7 @@ public class GameState {
      */
     public GameState(GameState other) {
         p1 = new Player(other.p1);
-        p2 = new Player(other.p2);
+        p2 = (other.p2 != null) ? new Player(other.p2) : null;
 //not sure what to do about bots
 p1Bot = other.p1Bot;
 p2Bot = other.p2Bot;
@@ -50,7 +50,7 @@ p2Bot = other.p2Bot;
      * Prepares the board, shuffles the tiles, deals them out.
      *
      * @param p1 The name of the first player.
-     * @param p2 The name of the second player.
+     * @param p2 The name of the second player; null if this is a solitaire game.
      * @param p1Bot The Bot instance which handles plays for the first player,
      *              or null.
      * @param p2Bot The Bot instance which handles plays for the second player,
@@ -58,7 +58,7 @@ p2Bot = other.p2Bot;
      */
     public void initGame(String p1, String p2, Bot p1Bot, Bot p2Bot) {
         this.p1 = new Player(Owner.P1, p1);
-        this.p2 = new Player(Owner.P2, p2);
+        this.p2 = (p2 != null) ? new Player(Owner.P2, p2) : null;
         this.p1Bot = p1Bot;
         this.p2Bot = p2Bot;
         unseenTiles = Tile.createTiles();
@@ -82,7 +82,7 @@ p2Bot = other.p2Bot;
         Collections.shuffle(unseenTiles);
         for (int ii = 0; ii < 6; ++ii) {
             this.p1.addToHand(draw());
-            this.p2.addToHand(draw());
+            if (this.p2 != null) this.p2.addToHand(draw());
         }
         coreSize = unseenTiles.size();
     }
@@ -120,6 +120,9 @@ p2Bot = other.p2Bot;
     public Player getPlayer1() {
         return p1;
     }
+    /**
+     * Returns null if this is a solitaire game.
+     */
     public Player getPlayer2() {
         return p2;
     }
