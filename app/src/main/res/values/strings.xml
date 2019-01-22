@@ -37,6 +37,27 @@
         <item>@string/stick_mud2_renderer_name</item>
     </string-array>
 
+    <string name="pref_bot_sleep_label">Bot Sleep Time</string>
+    <string-array name="bot_sleep_values">
+        <item>0</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>1500</item>
+        <item>2000</item>
+        <item>3000</item>
+        <item>5000</item>
+    </string-array>
+    <string-array name="bot_sleep_labels">
+        <item>None</item>
+        <item>0.5 seconds</item>
+        <item>1 second</item>
+        <item>1.5 seconds</item>
+        <item>2 seconds</item>
+        <item>3 seconds</item>
+        <item>5 seconds</item>
+    </string-array>
+    <string name="pref_bot_sleep_dflt">1500</string>
+
     <string name="switch_player_title">Swap Device</string>
     <!--
     1 - other player's name

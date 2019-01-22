@@ -8,6 +8,8 @@ format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Add the ability to swap renderers during play
   ([Issue #9](https://github.com/kuhrusty/Micropulease/issues/9)).  As
   part of this, add a Settings activity.
+- Make bot sleep time configurable
+  ([Issue #5](https://github.com/kuhrusty/Micropulease/issues/5)).
 - Add Help activity.
 
 #### Changed

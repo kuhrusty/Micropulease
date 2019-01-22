@@ -8,4 +8,11 @@
         android:entryValues="@array/renderer_names"
         android:defaultValue="@string/classic_renderer_name"/>
 
+    <ListPreference
+        android:key="PREF_BOT_SLEEP"
+        android:title="@string/pref_bot_sleep_label"
+        android:entries="@array/bot_sleep_labels"
+        android:entryValues="@array/bot_sleep_values"
+        android:defaultValue="@string/pref_bot_sleep_dflt"/>
+
     </PreferenceScreen>

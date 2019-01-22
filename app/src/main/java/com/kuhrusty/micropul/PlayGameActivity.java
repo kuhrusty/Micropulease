@@ -465,6 +465,11 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         //  Has our renderer changed?
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp != null) {
+            try {
+                botSleepTimeMS = Long.parseLong(sp.getString("PREF_BOT_SLEEP", "1500"));
+            } catch (NumberFormatException nfe) {
+                Log.e(LOGBIT, "got NumberFormatException", nfe);
+            }
             String prefRenderer = (rendererName != null) ? rendererName :
                     sp.getString(StartGameActivity.PREF_RENDERER, "classic_renderer_name");
             getOrCreateRenderer(prefRenderer);
