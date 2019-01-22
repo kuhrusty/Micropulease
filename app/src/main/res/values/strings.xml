@@ -37,6 +37,17 @@
         <item>@string/stick_mud2_renderer_name</item>
     </string-array>
 
+    <string name="pref_sound_set_label">Sound Set</string>
+    <string-array name="sound_set_ids">
+        <item>none</item>
+        <item>rusty</item>
+    </string-array>
+    <string-array name="sound_set_labels">
+        <item>None</item>
+        <item>Rusty</item>
+    </string-array>
+    <string name="pref_sound_set_dflt">rusty</string>
+
     <string name="pref_bot_sleep_label">Bot Sleep Time</string>
     <string-array name="bot_sleep_values">
         <item>0</item>

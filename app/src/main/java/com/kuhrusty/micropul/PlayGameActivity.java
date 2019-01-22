@@ -3,6 +3,8 @@ package com.kuhrusty.micropul;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +26,8 @@ import com.kuhrusty.micropul.model.Tile;
 import com.kuhrusty.micropul.model.TilePlayResult;
 import com.kuhrusty.micropul.renderer.BWRenderer;
 
+import java.util.HashSet;
+
 /**
  * <p>There are two places where a player's turn is really done: in drawTile(),
  * when they draw a tile from their supply--no going back after that--and in
@@ -33,7 +37,7 @@ import com.kuhrusty.micropul.renderer.BWRenderer;
  * set our status to "waiting for the other player" and tell the bot to make a
  * move.</p>
  */
-public class PlayGameActivity extends AppCompatActivity {
+public class PlayGameActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
     private static final String LOGBIT = "PlayGameActivity";
 
     /**
@@ -64,6 +68,13 @@ public class PlayGameActivity extends AppCompatActivity {
     private View drawButton;
     private View okButton;
     private View cancelButton;
+
+    private HashSet<MediaPlayer> runningPlayers = new HashSet<>();
+    private int tilePlayedSoundID;
+    private int stonePlayedSoundID;
+    private int tileDrawnSoundID;
+    private int okSoundID;
+    private int cancelSoundID;
 
     //  This may be silly, but... regardless of how long a bot takes, wait this
     //  long (in ms) before returning control to the player.  If the sleep time
@@ -136,6 +147,7 @@ public class PlayGameActivity extends AppCompatActivity {
     };
 
     private void proposeTilePlay(Tile tile, int xpos, int ypos) {
+        playSound(tilePlayedSoundID);
         savedGame = new GameState(game);
         if (game.getPlayer(currentPlayer).removeTileByID(tile.getID()) == null) {
             Log.w(LOGBIT, "player played tile " + tile.getID() + ", which they don't have!?");
@@ -165,6 +177,7 @@ public class PlayGameActivity extends AppCompatActivity {
     }
 
     private void proposeStonePlay(Group group) {
+        playSound(stonePlayedSoundID);
         savedGame = new GameState(game);
         game.getBoard().playStone(group, currentPlayer);
         boardView.setSelectedStone(false);
@@ -185,6 +198,7 @@ public class PlayGameActivity extends AppCompatActivity {
      */
     public void drawTile(View view) {
         Log.d(LOGBIT, "drawTile()");
+        playSound(tileDrawnSoundID);
 
         Player tp = game.getPlayer(currentPlayer);
         tp.addToHand(game.draw());
@@ -205,6 +219,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
 
     public void confirmPlay(View view) {
         Log.d(LOGBIT, "confirmPlay()");
+        playSound(okSoundID);
         savedGame = null;
 
         Player switchingToPlayer = null;
@@ -238,6 +253,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
 
     public void cancelPlay(View view) {
         Log.d(LOGBIT, "cancelPlay()");
+        playSound(cancelSoundID);
         game = savedGame;
         savedGame = null;
         boardView.setGame(game);
@@ -415,6 +431,10 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
 
         readPrefs(rendererName);
 
+        //  When people hit the volume buttons, we want to change the media
+        //  volume, not the ringtone volume.
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
         updateStatus();
     }
 
@@ -440,6 +460,17 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        synchronized (runningPlayers) {
+            for (MediaPlayer mp : runningPlayers) {
+                mp.release();
+            }
+            runningPlayers.clear();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         readPrefs(null);
@@ -461,6 +492,29 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
                 .show();
     }
 
+    /**
+     * Returns the resource ID for the given sound, or 0.
+     */
+    private int getSoundID(String soundSet, String soundID) {
+        return getResources().getIdentifier("sound_" + soundSet + "_" +
+                soundID, "raw", getPackageName());
+    }
+
+    private void playSound(int resID) {
+        Log.d(LOGBIT, "playSound(" + resID + ")");
+        if (resID == 0) return;
+        MediaPlayer mp = MediaPlayer.create(this, resID);
+        mp.setOnCompletionListener(this);
+        runningPlayers.add(mp);
+        mp.start();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        runningPlayers.remove(mediaPlayer);
+        mediaPlayer.release();
+    }
+
     private void readPrefs(String rendererName) {
         //  Has our renderer changed?
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -470,6 +524,24 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
             } catch (NumberFormatException nfe) {
                 Log.e(LOGBIT, "got NumberFormatException", nfe);
             }
+
+            String soundSet = sp.getString("PREF_SOUND", null);
+            if ((soundSet != null) && soundSet.equals("none")) soundSet = null;
+            if (soundSet != null) {
+                tilePlayedSoundID = getSoundID(soundSet, "tile_played");
+                stonePlayedSoundID = getSoundID(soundSet, "stone_played");
+                tileDrawnSoundID = getSoundID(soundSet, "tile_drawn");
+                //  Now, we only need these two guys if we're playing hot-seat.
+                //okSoundID = getSoundID(soundSet, "ok");
+                cancelSoundID = getSoundID(soundSet, "cancel");
+            } else {
+                tilePlayedSoundID = 0;
+                stonePlayedSoundID = 0;
+                tileDrawnSoundID = 0;
+                okSoundID = 0;
+                cancelSoundID = 0;
+            }
+
             String prefRenderer = (rendererName != null) ? rendererName :
                     sp.getString(StartGameActivity.PREF_RENDERER, "classic_renderer_name");
             getOrCreateRenderer(prefRenderer);
@@ -620,6 +692,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
             Log.d(LOGBIT, "MoveListener got playTile(tile " +
                     tile.getID() + ", " + tile.getRotation() + ")!!!");
             checkPlayer(player);
+            playSound(tilePlayedSoundID);
 
             //  Make sure the given player's hand contains the given tile
             player = game.getPlayer(expectPlayer);
@@ -662,6 +735,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         public void drawTile(Player player) {
             Log.d(LOGBIT, "MoveListener got drawTile()!!!");
             checkPlayer(player);
+            playSound(tileDrawnSoundID);
             Player tp = game.getPlayer(expectPlayer);
             if (tp.getTilesInHand() >= 6) {
 //XXX i18n
@@ -680,6 +754,7 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         public void placeStone(Player player, int groupID) {
             Log.d(LOGBIT, "MoveListener got placeStone()!!!");
             checkPlayer(player);
+            playSound(stonePlayedSoundID);
             Player tp = game.getPlayer(expectPlayer);
             int remaining = tp.getStonesRemaining();
             if (remaining < 1) {

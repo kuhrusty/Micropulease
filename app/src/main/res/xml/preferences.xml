@@ -9,6 +9,13 @@
         android:defaultValue="@string/classic_renderer_name"/>
 
     <ListPreference
+        android:key="PREF_SOUND"
+        android:title="@string/pref_sound_set_label"
+        android:entries="@array/sound_set_labels"
+        android:entryValues="@array/sound_set_ids"
+        android:defaultValue="@string/pref_sound_set_dflt"/>
+
+    <ListPreference
         android:key="PREF_BOT_SLEEP"
         android:title="@string/pref_bot_sleep_label"
         android:entries="@array/bot_sleep_labels"
