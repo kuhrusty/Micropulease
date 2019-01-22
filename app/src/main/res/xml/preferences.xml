@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="PREF_RENDERER"
+        android:title="@string/renderer_label"
+        android:entries="@array/renderer_names"
+        android:entryValues="@array/renderer_names"
+        android:defaultValue="@string/classic_renderer_name"/>
+
+    </PreferenceScreen>

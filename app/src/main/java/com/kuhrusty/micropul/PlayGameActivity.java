@@ -2,7 +2,9 @@ package com.kuhrusty.micropul;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -269,6 +271,14 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
     }
 
     /**
+     * Called when the Settings button is hit.
+     */
+    public void openSettings(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    /**
      * Hides the hand area, pops up a dialog.
      */
     private void switchPlayer(String newPlayerName) {
@@ -337,22 +347,6 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         }
         if (p2type == null) p2type = PlayerType.getPlayerTypes(getResources())[0];
 
-        TileRenderer renderer = null;
-        if (rendererName != null) {
-            TileRenderer[] tra = StartGameActivity.getTileRenderers(this);
-            for (int ii = 0; ii < tra.length; ++ii) {
-                if (rendererName.equals(tra[ii].toString())) {
-                    renderer = tra[ii];
-                    break;
-                }
-            }
-        }
-        if (renderer == null) {
-            Log.w(LOGBIT, "no renderer found, creating default...");
-            renderer = new BWRenderer(getResources());
-        }
-        renderer.prepare();
-
         if (game == null) {
             game = new GameState();
             game.initGame(name, name2, bot, bot2);
@@ -376,14 +370,11 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         handView = findViewById(R.id.handView);
         boardView = findViewById(R.id.boardView);
         for (int ii = 0; ii < tileView.length; ++ii) {
-            tileView[ii].setRenderer(renderer);
             tileView[ii].setOnTouchListener(tileTouchListener);
         }
-        stonesView.setRenderer(renderer);
         stonesView.setOnTouchListener(tileTouchListener);
         stonesView.setStonesRemaining(currentPlayer, 3);
         boardView.setGame(game);
-        boardView.setRenderer(renderer);
         boardView.setOnTouchListener(boardTouchListener);
 
         drawButton = findViewById(R.id.drawTileButton);
@@ -392,6 +383,8 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         cancelButton.setEnabled(false);
         okButton = findViewById(R.id.okButton);
         okButton.setEnabled(false);
+
+        readPrefs(rendererName);
 
         updateStatus();
     }
@@ -418,6 +411,12 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        readPrefs(null);
+    }
+
+    @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -431,6 +430,46 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
                 })
                 .setNegativeButton(R.string.confirm_exit_cancel, null)
                 .show();
+    }
+
+    private void readPrefs(String rendererName) {
+        //  Has our renderer changed?
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp != null) {
+            String prefRenderer = (rendererName != null) ? rendererName :
+                    sp.getString(StartGameActivity.PREF_RENDERER, "classic_renderer_name");
+            getOrCreateRenderer(prefRenderer);
+        }
+    }
+
+    private TileRenderer getOrCreateRenderer(String name) {
+        Log.d(LOGBIT, "getOrCreateRenderer(\"" + name + "\") hit");
+        TileRenderer rv = null;
+        if (name != null) {
+            TileRenderer[] tra = StartGameActivity.getTileRenderers(this);
+            for (int ii = 0; ii < tra.length; ++ii) {
+                Log.d(LOGBIT, "  evaluating \"" + tra[ii].toString() + "\"");
+                if (name.equals(tra[ii].toString())) {
+                    rv = tra[ii];
+                    break;
+                }
+            }
+        }
+        if (rv == null) {
+            Log.w(LOGBIT, "no renderer found, creating default...");
+            rv = new BWRenderer(getResources());
+        }
+        rv.prepare();
+
+        if (tileView != null) {
+            for (int ii = 0; ii < tileView.length; ++ii) {
+                tileView[ii].setRenderer(rv);
+            }
+        }
+        if (stonesView != null) stonesView.setRenderer(rv);
+        if (boardView != null) boardView.setRenderer(rv);
+
+        return rv;
     }
 
     private void updateStatus() {

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Micropulease</string>
+    <string name="title_activity_settings">Settings</string>
 
     <string name="p1_name_label">Player 1 Name</string>
     <string name="p2_type_label">Opponent Type</string>
@@ -27,6 +28,14 @@
     <string name="classic_renderer_name">Classic</string>
     <string name="stick_mud_renderer_name">Archinerd\'s Stick/Mud Farmer</string>
     <string name="stick_mud2_renderer_name">Archinerd\'s Stick/Mud Farmer 2</string>
+
+    <string-array name="renderer_names">
+        <item>@string/classic_renderer_name</item>
+        <item>@string/bw_renderer_name</item>
+        <item>@string/carthaginian1_renderer_name</item>
+        <item>@string/stick_mud_renderer_name</item>
+        <item>@string/stick_mud2_renderer_name</item>
+    </string-array>
 
     <string name="switch_player_title">Swap Device</string>
     <!--

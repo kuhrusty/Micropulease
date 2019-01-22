@@ -131,6 +131,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/status"/>
 
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:onClick="openSettings"
+        app:layout_constraintBottom_toBottomOf="@+id/okButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/okButton"
+        app:srcCompat="@android:drawable/ic_menu_manage"/>
+
     <Button
         android:id="@+id/okButton"
         android:layout_width="wrap_content"
@@ -153,7 +164,7 @@
         android:text="Cancel"
         android:onClick="cancelPlay"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintLeft_toRightOf="@+id/settingsButton"/>
 
     <TextView
         android:id="@+id/coreRemaining"
