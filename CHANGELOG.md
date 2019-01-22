@@ -11,6 +11,8 @@ format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Add Help activity.
 
 #### Changed
+- Fix the roughness at the end of the game
+  ([Issue #15](https://github.com/kuhrusty/Micropulease/issues/15)).
 - In PlayGameActivity, make the Cancel button an ImageButton.
 - Update to Android Studio 3.3/Gradle 4.10.  No idea whether this breaks
   anything.

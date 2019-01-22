@@ -53,6 +53,8 @@ public class PlayGameActivity extends AppCompatActivity {
     private TextView youStatus;
     private TextView opponentStatus;
     private TextView status;
+    //  note that we use the visibility of this guy as a flag to indicate that
+    //  we've popped up the "game over" notification.
     private TextView coreRemaining;
     private TileView[] tileView = new TileView[6];
     private TileView selectedTile = null;
@@ -214,7 +216,14 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
         cancelButton.setEnabled(false);
         okButton.setEnabled(false);
         if (game.coreSize() == 0) {
-            gameOver();
+            //  uhh... weak, but use this as a flag to see if we've already
+            //  told the user the game is over.
+            if (coreRemaining.getVisibility() != View.VISIBLE) {
+                finish();
+                return;
+            } else {
+                gameOver();
+            }
         } else if (switchingToPlayer == null) {
             //  still this player's turn.
             updateStatus();
@@ -240,30 +249,43 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
     }
 
     /**
-     * It would be nice if, after hitting OK, this let the player view the final
-     * board state; instead it just croaks the Activity.
+     * This disables most of the UI components and sets coreRemaining invisible.
      */
     private void gameOver() {
+        handView.setEnabled(false);
+        //  well... that's not quite enough.
+        for (int ii = 0; ii < tileView.length; ++ii) {
+            tileView[ii].setEnabled(false);
+        }
+        stonesView.setEnabled(false);
+        drawButton.setEnabled(false);
+        boardView.setEnabled(false);
+        cancelButton.setEnabled(false);
+        okButton.setEnabled(true);
+        coreRemaining.setVisibility(View.GONE);
+
         int p1score = game.getPlayer1().calculateScore(game.getBoard());
         int p2score = game.getPlayer2().calculateScore(game.getBoard());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String msg;
         if (p1score == p2score) {
             builder.setTitle(R.string.game_over_tie_title);
-            builder.setMessage(getString(R.string.game_over_tie_message, p1score));
+            msg = getString(R.string.game_over_tie_message, p1score);
         } else if (p1score > p2score) {
             builder.setTitle(getString(R.string.game_over_title,
                     game.getPlayer1().getName()));
-            builder.setMessage(getString(R.string.game_over_message,
-                    game.getPlayer1().getName(), p1score, game.getPlayer2().getName(), p2score));
+            msg = getString(R.string.game_over_message,
+                    game.getPlayer1().getName(), p1score, game.getPlayer2().getName(), p2score);
         } else {
             builder.setTitle(getString(R.string.game_over_title,
                     game.getPlayer2().getName()));
-            builder.setMessage(getString(R.string.game_over_message,
-                    game.getPlayer2().getName(), p2score, game.getPlayer1().getName(), p1score));
+            msg = getString(R.string.game_over_message,
+                    game.getPlayer2().getName(), p2score, game.getPlayer1().getName(), p1score);
         }
+        status.setText(msg);
+        builder.setMessage(msg);
         builder.setPositiveButton(R.string.switch_player_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                finish();
             }
         });
         AlertDialog dialog = builder.create();
