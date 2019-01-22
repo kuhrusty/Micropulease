@@ -11,5 +11,6 @@ format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Add Help activity.
 
 #### Changed
+- In PlayGameActivity, make the Cancel button an ImageButton.
 - Update to Android Studio 3.3/Gradle 4.10.  No idea whether this breaks
   anything.
