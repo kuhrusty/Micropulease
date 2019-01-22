@@ -279,6 +279,13 @@ Player switchingToPlayer = (currentPlayer == Owner.P1) ? game.getPlayer1() : gam
     }
 
     /**
+     * Called when the Help button is hit.
+     */
+    public void openHelp(View view) {
+        startActivity(new Intent(this, HelpActivity.class));
+    }
+
+    /**
      * Hides the hand area, pops up a dialog.
      */
     private void switchPlayer(String newPlayerName) {
