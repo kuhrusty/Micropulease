@@ -187,4 +187,11 @@ public class StartGameActivity extends AppCompatActivity {
         //startActivityForResult(intent, RESULT_SAVE_SCORE_OR_WHATEVER;
         startActivity(intent);
     }
+
+    /**
+     * Called when the Help button is hit.
+     */
+    public void openHelp(View view) {
+        startActivity(new Intent(this, HelpActivity.class));
+    }
 }

@@ -146,6 +146,17 @@
         app:layout_constraintTop_toBottomOf="@+id/themeSpinner"
         />
 
+    <ImageButton
+        android:id="@+id/helpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="4dp"
+        android:onClick="openHelp"
+        app:layout_constraintBottom_toBottomOf="@+id/startGame"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/startGame"
+        app:srcCompat="@android:drawable/ic_menu_help"/>
+
     <Button
         android:id="@+id/startGame"
         android:layout_width="wrap_content"
