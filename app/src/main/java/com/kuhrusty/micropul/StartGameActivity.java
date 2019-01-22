@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -49,7 +50,7 @@ public class StartGameActivity extends AppCompatActivity {
     private static final String PREF_P1_NAME = "PREF_P1_NAME";
     private static final String PREF_P2_NAME = "PREF_P2_NAME";
     private static final String PREF_P2_TYPE = "PREF_P2_TYPE";
-    private static final String PREF_RENDERER = "PREF_RENDERER";
+    static final String PREF_RENDERER = "PREF_RENDERER";
     private String prefP1Name = null;
     private String prefP2Name = null;
     private String prefP2Type = null;
@@ -63,7 +64,7 @@ public class StartGameActivity extends AppCompatActivity {
         prefP1Name = getResources().getString(R.string.p1_default_name);
         prefP2Name = getResources().getString(R.string.p2_default_name);
 
-        SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp != null) {
             prefP1Name = sp.getString(PREF_P1_NAME, prefP1Name);
             prefP2Name = sp.getString(PREF_P2_NAME, prefP2Name);
@@ -73,7 +74,7 @@ public class StartGameActivity extends AppCompatActivity {
     }
 
     private void savePrefs() {
-        SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp != null) {
             SharedPreferences.Editor pe = sp.edit();
             pe.putString(PREF_P1_NAME, prefP1Name);
@@ -146,6 +147,22 @@ public class StartGameActivity extends AppCompatActivity {
                 selectedRenderer = null;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //  Did they change renderers during the game?
+        loadPrefs();
+        Spinner renderer = findViewById(R.id.themeSpinner);
+        if ((renderer != null) && (prefRenderer != null)) {
+            for (int ii = 0; ii < renderer.getCount(); ++ii) {
+                if (prefRenderer.equals(renderer.getAdapter().getItem(ii).toString())) {
+                    renderer.setSelection(ii);
+                    break;
+                }
+            }
+        }
     }
 
     public void doStartGame(View view) {
