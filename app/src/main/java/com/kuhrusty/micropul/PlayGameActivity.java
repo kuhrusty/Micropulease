@@ -374,6 +374,7 @@ Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() !=
                 handView.setVisibility(View.VISIBLE);
             }
         });
+        builder.setCancelable(false);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
