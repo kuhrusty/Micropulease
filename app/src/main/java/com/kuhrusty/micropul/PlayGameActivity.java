@@ -114,9 +114,11 @@ public class PlayGameActivity extends AppCompatActivity implements MediaPlayer.O
                 //  We're waiting for them to confirm or cancel a move.
                 return false;
             }
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                return selectedTile != null;
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            //  if scrollSinceLastActionDown(), we think they slid their finger
+            //  around enough that this is the end of a scroll gesture, not a
+            //  tap.
+            if ((motionEvent.getAction() == MotionEvent.ACTION_UP) &&
+                (!boardView.scrollSinceLastActionDown())) {
                 Tile tile;
                 if ((selectedTile != null) && ((tile = selectedTile.getTile()) != null)) {
                     //  map the touch location to a tile position, see if it's
