@@ -205,6 +205,11 @@ public class PlayGameActivity extends AppCompatActivity implements MediaPlayer.O
         Player tp = game.getPlayer(currentPlayer);
         tp.addToHand(game.draw());
         tp.setTilesInSupply(tp.getTilesInSupply() - 1);
+        if (selectedTile != null) {
+            selectedTile.setSelected(false);
+            selectedTile = null;
+        }
+        boardView.setSelectedStone(false);
 
 currentPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() != null)) ? Owner.P2 : Owner.P1;
 Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() != null)) ? game.getPlayer1() : game.getPlayer2();
