@@ -1,0 +1,21 @@
+This includes the following audio files from freesound.org:
+
+app/src/main/res/raw/sound_freesound1_cancel.wav:
+
+    https://freesound.org/people/Greencouch/sounds/124905/
+    License: CC BY 3.0
+
+app/src/main/res/raw/sound_freesound1_stone_played.mp3
+
+    https://freesound.org/people/deleted_user_5405837/sounds/399303/
+    License: CC BY 3.0
+
+app/src/main/res/raw/sound_freesound1_tile_drawn.wav
+
+    https://freesound.org/people/THE_bizniss/sounds/37785/
+    License: CC BY 3.0
+
+app/src/main/res/raw/sound_freesound1_tile_played.wav
+
+    https://freesound.org/people/ecfike/sounds/128919/
+    License: CC0 1.0

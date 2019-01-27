@@ -577,7 +577,8 @@ Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() !=
                 Log.e(LOGBIT, "got NumberFormatException", nfe);
             }
 
-            String soundSet = sp.getString("PREF_SOUND", null);
+            String soundSet = sp.getString("PREF_SOUND",
+                    getString(R.string.pref_sound_set_dflt));
             if ((soundSet != null) && soundSet.equals("none")) soundSet = null;
             if (soundSet != null) {
                 tilePlayedSoundID = getSoundID(soundSet, "tile_played");

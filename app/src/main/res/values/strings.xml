@@ -58,13 +58,13 @@
     <string name="pref_sound_set_label">Sound Set</string>
     <string-array name="sound_set_ids">
         <item>none</item>
-        <item>rusty</item>
+        <item>freesound1</item>
     </string-array>
     <string-array name="sound_set_labels">
         <item>None</item>
-        <item>Rusty</item>
+        <item>Freesound I</item>
     </string-array>
-    <string name="pref_sound_set_dflt">rusty</string>
+    <string name="pref_sound_set_dflt">freesound1</string>
 
     <string name="pref_bot_sleep_label">Bot Sleep Time</string>
     <string-array name="bot_sleep_values">
