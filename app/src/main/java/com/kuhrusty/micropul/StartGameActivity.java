@@ -95,7 +95,6 @@ public class StartGameActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.nameText)).setText(prefP1Name);
         ((TextView)findViewById(R.id.p2NameText)).setText(prefP2Name);
 
-//erkk, how do we restore the selected p2type & renderer from saved prefs?
         Spinner opponentType = findViewById(R.id.p2TypeSpinner);
         //  blugh.
         ArrayAdapter<PlayerType> ptAdapter = new ArrayAdapter<>(this,
@@ -121,6 +120,14 @@ public class StartGameActivity extends AppCompatActivity {
                 selectedPlayerType = null;
             }
         });
+        if (prefP2Type != null) {
+            for (int ii = 0; ii < ptAdapter.getCount(); ++ii) {
+                if (prefP2Type.equals(ptAdapter.getItem(ii).toString())) {
+                    opponentType.setSelection(ii);
+                    break;
+                }
+            }
+        }
 
         final ImageView preview = findViewById(R.id.themeSample);
         Spinner renderer = findViewById(R.id.themeSpinner);

@@ -26,6 +26,7 @@ format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
   ([Issue #18](https://github.com/kuhrusty/Micropulease/issues/18)).
 - Clear the selected tile/stone when drawing a new tile
   ([Issue #16](https://github.com/kuhrusty/Micropulease/issues/16)).
+- At startup, attempt to restore the last selected player type.
 - In PlayGameActivity, make the Cancel button an ImageButton.
 - Update to Android Studio 3.3/Gradle 4.10.  No idea whether this breaks
   anything.
