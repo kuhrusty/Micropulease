@@ -4,14 +4,6 @@ There are two main areas which need a lot of work: improving the UI, and
 adding bots/AIs which don't totally suck.  See also the issue tracker at
 https://github.com/kuhrusty/Micropulease/issues.
 
-### Interesting stuff in the code
-
-- Running the bot on its own thread, and then joining back up to the UI
-  thread when the bot makes its move.  (`PlayGameActivity.notifyBot()`)
-- Loading an image from resources, then splitting it up into separate
-  pieces (` BaseImageRenderer.imageToTiles()`,
-  `StickMudRenderer2.quarter()` and `explodeNines()`)
-
 ### Checking it out
 
 In Android Studio 3.2.1:
