@@ -166,5 +166,6 @@
     <string name="leader_beatdowns_label">Worst Beatdowns</string>
     <string name="leader_solitaire_label">Solitaire High Scores</string>
     <string name="leader_personal_label">Personal Best</string>
+    <string name="leader_no_high_scores">No high scores yet!</string>
 
 </resources>

@@ -44,6 +44,11 @@ public class LeaderboardHTML {
         buf.append(style);
         buf.append("</style></head><body>\n");
 
+        if (lb.isEmpty()) {
+            buf.append("<h1>").append(context.getString(R.string.leader_no_high_scores))
+                    .append("</h1></body></html>\n");
+            return buf.toString();
+        }
         table(buf, context.getString(R.string.leader_high_scores_label),
                 lb.getHighScores(), highlight.getHighScoreRow(), false, false, df);
         table(buf, context.getString(R.string.leader_beatdowns_label),

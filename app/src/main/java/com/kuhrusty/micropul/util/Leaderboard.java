@@ -347,6 +347,14 @@ public class Leaderboard implements Parcelable {
     }
 
     /**
+     * Returns true if this contains no high scores at all.
+     * @return
+     */
+    public boolean isEmpty() {
+        return solitaire.isEmpty() && highScores.isEmpty();
+    }
+
+    /**
      * Adds a new Entry to the Leaderboard.  If it's not a high enough score, it
      * will be discarded.
      *
