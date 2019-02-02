@@ -10,3 +10,16 @@
   `StickMudRenderer2.quarter()` and `explodeNines()`)
 - Loading audio files from names generated at runtime
   (`PlayGameActivity.getSoundID()`)
+- Some inter-activity communication, where
+  `StartGameActivity.doStartGame()` listens for the result from
+  `PlayGameActivity`; if `PlayGameActivity` sent back the ending scores,
+  then `StartGameActivity.onActivityResult()` sees if the scores were
+  good enough to set a new record, and launches `LeaderboardActivty` if
+  so.
+
+## Unit test stuff
+
+- Dropping in a no-op `Log` in non-instrumented tests, copied from
+  [here](https://stackoverflow.com/questions/36787449/how-to-mock-method-e-in-log)
+- Mocking a Context which gives back files from the filesystem when
+  `openFileInput()`/`openFileOutput()` are called (`TestUtil`)

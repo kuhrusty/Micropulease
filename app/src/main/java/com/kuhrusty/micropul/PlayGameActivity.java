@@ -1,5 +1,6 @@
 package com.kuhrusty.micropul;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +48,12 @@ public class PlayGameActivity extends AppCompatActivity implements MediaPlayer.O
     public static final String INTENT_PLAYER2_NAME = "name2";
     public static final String INTENT_PLAYER2_TYPE = "type2";
     public static final String INTENT_RENDERER_NAME = "renderer";
+    /**
+     * On the way back out, if the game finished, this will be set to player 1's
+     * score.
+     */
+    public static final String INTENT_PLAYER1_SCORE = "score1";
+    public static final String INTENT_PLAYER2_SCORE = "score2";
 
     private Owner currentPlayer = Owner.P1;
     private GameState game = null;
@@ -239,10 +246,8 @@ Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() !=
         cancelButton.setEnabled(false);
         okButton.setEnabled(false);
         if (game.coreSize() == 0) {
-            //  uhh... weak, but use this as a flag to see if we've already
-            //  told the user the game is over.
-            if (coreRemaining.getVisibility() != View.VISIBLE) {
-                finish();
+            if (alreadyToldUserGameOver()) {
+                finishWithResult();
                 return;
             } else {
                 gameOver();
@@ -347,6 +352,12 @@ Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() !=
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private boolean alreadyToldUserGameOver() {
+        //  uhh... weak, but use this as a flag to see if we've already told the
+        //  user the game is over.
+        return coreRemaining.getVisibility() != View.VISIBLE;
     }
 
     /**
@@ -530,6 +541,10 @@ Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() !=
 
     @Override
     public void onBackPressed() {
+        if (alreadyToldUserGameOver()) {
+            finishWithResult();
+            return;
+        }
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.confirm_exit_title)
@@ -537,6 +552,7 @@ Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() !=
                 .setPositiveButton(R.string.confirm_exit_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        setResult(Activity.RESULT_CANCELED);
                         finish();
                     }
                 })
@@ -559,6 +575,21 @@ Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() !=
         mp.setOnCompletionListener(this);
         runningPlayers.add(mp);
         mp.start();
+    }
+
+    /**
+     * Sets up the final scores and calls finish().
+     */
+    private void finishWithResult() {
+        Intent rv = new Intent();
+        rv.putExtra(INTENT_PLAYER1_NAME, game.getPlayer1().getName());
+        rv.putExtra(INTENT_PLAYER1_SCORE, game.getPlayer1().calculateScore(game.getBoard()));
+        if (game.getPlayer2() != null) {
+            rv.putExtra(INTENT_PLAYER2_NAME, game.getPlayer2().getName());
+            rv.putExtra(INTENT_PLAYER2_SCORE, game.getPlayer2().calculateScore(game.getBoard()));
+        }
+        setResult(RESULT_OK, rv);
+        finish();
     }
 
     @Override
@@ -844,7 +875,7 @@ Player switchingToPlayer = ((currentPlayer == Owner.P1) && (game.getPlayer2() !=
                     }
                     builder.setPositiveButton(R.string.concede_ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            finish();
+                            finishWithResult();
                         }
                     });
                     AlertDialog dialog = builder.create();

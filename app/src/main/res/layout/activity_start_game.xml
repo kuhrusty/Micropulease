@@ -157,6 +157,17 @@
         app:layout_constraintTop_toTopOf="@+id/startGame"
         app:srcCompat="@android:drawable/ic_menu_help"/>
 
+    <ImageButton
+        android:id="@+id/leaderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginLeft="4dp"
+        android:onClick="openLeaderboard"
+        app:layout_constraintBottom_toBottomOf="@+id/startGame"
+        app:layout_constraintLeft_toRightOf="@+id/helpButton"
+        app:layout_constraintTop_toTopOf="@+id/startGame"
+        app:srcCompat="@android:drawable/ic_menu_sort_by_size"/>
+
     <Button
         android:id="@+id/startGame"
         android:layout_width="wrap_content"

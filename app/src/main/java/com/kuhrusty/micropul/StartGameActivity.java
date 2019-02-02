@@ -21,6 +21,8 @@ import com.kuhrusty.micropul.renderer.CarthaginianRenderer1;
 import com.kuhrusty.micropul.renderer.ClassicRenderer;
 import com.kuhrusty.micropul.renderer.StickMudRenderer1;
 import com.kuhrusty.micropul.renderer.StickMudRenderer2;
+import com.kuhrusty.micropul.util.Leaderboard;
+import com.kuhrusty.micropul.util.LeaderboardRepository;
 
 /**
  * A not-very-pretty activity which just gathers the information needed to
@@ -28,6 +30,8 @@ import com.kuhrusty.micropul.renderer.StickMudRenderer2;
  */
 public class StartGameActivity extends AppCompatActivity {
     private static final String LOGBIT = "StartGameActivity";
+
+    private static final int RESULT_SAVE_SCORE = RESULT_FIRST_USER + 1;
 
     private static TileRenderer[] renderers = null;
 
@@ -46,6 +50,8 @@ public class StartGameActivity extends AppCompatActivity {
 
     private PlayerType selectedPlayerType = null;
     private TileRenderer selectedRenderer = null;
+    private Leaderboard leaderboard = null;
+    private Leaderboard.Highlight highlight = null;
 
     private static final String PREF_P1_NAME = "PREF_P1_NAME";
     private static final String PREF_P2_NAME = "PREF_P2_NAME";
@@ -191,7 +197,59 @@ public class StartGameActivity extends AppCompatActivity {
             intent.putExtra(PlayGameActivity.INTENT_RENDERER_NAME, prefRenderer);
         }
         savePrefs();
-        //startActivityForResult(intent, RESULT_SAVE_SCORE_OR_WHATEVER;
+        //  We start the PlayGameActivity, telling it we want the final scores
+        //  back; when we receive them, we see if they're good enough to add to
+        //  the leaderboard, and then launch the LeaderboardActivity if so.
+        startActivityForResult(intent, RESULT_SAVE_SCORE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RESULT_SAVE_SCORE) {
+            if (resultCode == RESULT_OK) {
+                String p1n = data.getStringExtra(PlayGameActivity.INTENT_PLAYER1_NAME);
+                int p1s = data.getIntExtra(PlayGameActivity.INTENT_PLAYER1_SCORE, 0);
+                String p2n = data.getStringExtra(PlayGameActivity.INTENT_PLAYER2_NAME);
+                int p2s = data.getIntExtra(PlayGameActivity.INTENT_PLAYER2_SCORE, 0);
+                long now = System.currentTimeMillis();
+                Log.d(LOGBIT, "RESULT_SAVE_SCORE RESULT_OK, p1 " + p1n +
+                        " " + p1s + ", p2 " + p2n + " " + p2s);
+                if (p1n == null) {
+                    Log.d(LOGBIT, "got null player1 name, no point continuing");
+                    return;
+                }
+                if (leaderboard == null) {
+                    loadLeaderboard();
+                }
+                Leaderboard.Entry le = (p2n != null) ?
+                        new Leaderboard.Entry(p1n, p1s, p2n, p2s, now) :
+                        new Leaderboard.Entry(p1n, p1s, now);
+                highlight = leaderboard.add(le);
+                if (highlight != null) {
+                    //  The file should be small, but still probably shouldn't
+                    //  do this on the UI thread.
+                    new LeaderboardRepository(this).save(leaderboard);
+                    openLeaderboard(null);
+                }
+                //  else they didn't make the cut.
+            } else {
+                Log.d(LOGBIT, "RESULT_SAVE_SCORE, instead of RESULT_OK, got " + resultCode);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    /**
+     * Called when the Leaderboard button is hit, or when we get a result back
+     */
+    public void openLeaderboard(View view) {
+        if (leaderboard == null) loadLeaderboard();
+        Intent intent = new Intent(this, LeaderboardActivity.class);
+        intent.putExtra(LeaderboardActivity.INTENT_LEADERBOARD, leaderboard);
+        if (highlight != null) {
+            intent.putExtra(LeaderboardActivity.INTENT_HIGHLIGHT, highlight);
+        }
         startActivity(intent);
     }
 
@@ -200,5 +258,21 @@ public class StartGameActivity extends AppCompatActivity {
      */
     public void openHelp(View view) {
         startActivity(new Intent(this, HelpActivity.class));
+    }
+
+    /**
+     * This just attempts to read the Leaderboard from file, and returns a new
+     * empty one if that fails.  Rather than doing this on the UI thread in
+     * onActivityResult() and openLeaderboard(), we should probably load this on
+     * a new thread in onCreate().
+     */
+    private void loadLeaderboard() {
+        if (leaderboard == null) {
+            leaderboard = new LeaderboardRepository(this).load();
+            if (leaderboard == null) {
+                Log.w(LOGBIT, "no leaderboard loaded, starting new one");
+                leaderboard = new Leaderboard();
+            }
+        }
     }
 }

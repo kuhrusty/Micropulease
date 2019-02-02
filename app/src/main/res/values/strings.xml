@@ -162,4 +162,9 @@
     -->
     <string name="core_remaining">Core: %1$d</string>
 
+    <string name="leader_high_scores_label">High Scores</string>
+    <string name="leader_beatdowns_label">Worst Beatdowns</string>
+    <string name="leader_solitaire_label">Solitaire High Scores</string>
+    <string name="leader_personal_label">Personal Best</string>
+
 </resources>
