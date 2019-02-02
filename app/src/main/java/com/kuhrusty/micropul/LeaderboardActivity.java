@@ -39,7 +39,9 @@ public class LeaderboardActivity extends AppCompatActivity {
             LeaderboardHTML lhtml = new LeaderboardHTML();
             String html = lhtml.toHTML(this, leaderboard, highlight);
             //Log.d(LOGBIT, "html:\n" + html);
-            wv.loadData(html, "text/html", null);
+            //wv.loadData(html, "text/html", null);
+            //  No idea why that stopped working & had to be replaced with this:
+            wv.loadDataWithBaseURL(null, html, "text/html", null, null);
         }
     }
 }
