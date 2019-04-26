@@ -1,6 +1,6 @@
 # Micropulease
 
-[Micropul](https://boardgamegeek.com/boardgame/10660) for Android; play hot-seat or against a bot.
+[Micropul](https://boardgamegeek.com/boardgame/10660) for Android; play hot-seat or against a bot.  This is also available as a free download in the Google Play store [here](https://play.google.com/store/apps/details?id=com.kuhrusty.micropul).
 
 **The existing bots are really bad,** but it's intended to be easy to add your own bot; see [CONTRIBUTING](CONTRIBUTING.md).
 
